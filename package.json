@@ -1,0 +1,15 @@
+{
+  "name": "crex",
+  "version": "0.1.0",
+  "description": "Creative Exchange SDK for Javascript",
+  "author": "Mateusz Luczak <mateusz.luczak@outlook.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "devDependencies": {
+    "rollup": "^0.41.6",
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0"
+  }
+}
