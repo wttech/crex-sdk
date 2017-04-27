@@ -1,4 +1,4 @@
-<p align="center"><img width="150px" src="http://zg.cognifide.com/galaxite/img/zg_logo.svg"></p>
+<img width="200px" src="http://zg.cognifide.com/galaxite/img/zg_logo.svg">
 
 ## Creative Exchange SDK
 Zen Garden Creative Exchange SDK for Javascript
