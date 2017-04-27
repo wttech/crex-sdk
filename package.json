@@ -5,11 +5,18 @@
   "author": "Mateusz Luczak <mateusz.luczak@outlook.com>",
   "license": "MIT",
   "scripts": {
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "test": "mocha test/**"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "mocha": "^3.3.0",
     "rollup": "^0.41.6",
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-node-resolve": "^3.0.0"
+  },
+  "dependencies": {
+    "superagent": "^3.5.2"
   }
 }

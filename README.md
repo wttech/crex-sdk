@@ -14,10 +14,10 @@ Use with node.js or module bundler like Webpack
 var CrEx = require('crex');
 
 var crex = new CrEx({
-	user: 'admin',
-	password: 'admin',
-	address: 'localhost',
-	port: 4502
+  user: 'admin',
+  password: 'admin',
+  address: 'localhost',
+  port: 4502
 });
 
 crex.exportGetAllPackages()
