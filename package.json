@@ -15,7 +15,8 @@
     "mocha": "^3.3.0",
     "rollup": "^0.41.6",
     "rollup-plugin-commonjs": "^8.0.2",
-    "rollup-plugin-node-resolve": "^3.0.0"
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-uglify": "^1.0.2"
   },
   "dependencies": {
     "superagent": "^3.5.2"
