@@ -5,7 +5,7 @@ var uglify = require('rollup-plugin-uglify');
 
 var pkg = JSON.parse(fs.readFileSync( 'package.json', 'utf-8'));
 
-var banner = fs.readFileSync( 'lib/banner.js', 'utf-8' )
+var banner = fs.readFileSync('banner.txt', 'utf-8')
 	.replace( '${version}', pkg.version);
 
 module.exports = {
