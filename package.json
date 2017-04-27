@@ -1,9 +1,10 @@
 {
   "name": "crex",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "Creative Exchange SDK for Javascript",
   "author": "Mateusz Luczak <mateusz.luczak@outlook.com>",
   "license": "MIT",
+  "main": "dist/crex.js",
   "scripts": {
     "build": "rollup -c",
     "test": "mocha test/**"
