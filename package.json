@@ -1,12 +1,16 @@
 {
   "name": "crex",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "description": "Creative Exchange SDK for Javascript",
   "author": "Mateusz Luczak <mateusz.luczak@outlook.com>",
   "license": "MIT",
   "main": "dist/crex.js",
+  "module": "dist/crex.es.js",
+  "jsnext:main": "dist/crex.es.js",
   "scripts": {
-    "build": "rollup -c",
+    "build": "npm run build:module && npm run build:browser",
+    "build:module": "rollup -c",
+    "build:browser": "rollup -c rollup.config.browser.js",
     "test": "mocha test/**"
   },
   "devDependencies": {

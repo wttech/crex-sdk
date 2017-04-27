@@ -1,4 +1,3 @@
-var fs = require('fs');
 var commonjs = require('rollup-plugin-commonjs');
 var resolve = require('rollup-plugin-node-resolve');
 var uglify = require('rollup-plugin-uglify');
@@ -10,16 +9,19 @@ var banner = fs.readFileSync( 'lib/banner.js', 'utf-8' )
 
 module.exports = {
 	entry: 'lib/index.js',
-	targets: [
-		{ dest: 'dist/crex.js', format: 'cjs' },
-		{ dest: 'dist/crex.es.js', format: 'es' }
-	],
+	dest: 'dist/crex.browser.min.js',
+	format: 'iife',
 	banner: banner,
 	moduleName: 'CrEx',
 	plugins: [
 		resolve({
 			jsnext: true,
-			main: true
-		})
+			main: true,
+			browser: true
+		}),
+		commonjs({
+			sourceMap: false
+		}),
+		uglify()
 	]
 };
