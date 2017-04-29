@@ -2,6 +2,7 @@
 var program = require('commander');
 var ora = require('ora');
 var fs = require('fs');
+var chalk = require('chalk');
 var path = require('path');
 var archiver = require('archiver');
 var CrEx = require('../lib/index');
@@ -59,12 +60,12 @@ new Promise((resolve, reject) => {
 		file: fs.createReadStream(name)
 	});
 }).then((res) => {
-	spinner.text = 'Installing...';
+	spinner.text = 'Installing package...';
 	return crex.importInstallPackage({
 		id: res.model.id
 	});
 }).then(() => {
-	spinner.succeed('Package ' + name + ' installed');
+	spinner.succeed('Package ' + chalk.blue(name) + ' installed');
 }).catch((err) => {
 	spinner.fail(err);
 });
