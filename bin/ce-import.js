@@ -45,7 +45,7 @@ new Promise((resolve, reject) => {
 		});
 
 		program.compress.forEach((folder) => {
-			let path = (folder.indexOf('/') !== -1) ? folder.split('/').pop() : folder;
+			const path = folder.split('/').pop();
 			zip.directory(folder + '/', path);
 		});
 

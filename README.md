@@ -35,7 +35,7 @@ $ npm install crex -g
 ### Exporting package
 
 ```bash
-ce export /content/showcase/default/en_gb/home
+ce export /content/showcase/default/en_gb/home -x
 ```
 
 ### Importing package
