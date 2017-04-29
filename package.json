@@ -1,28 +1,30 @@
 {
   "name": "crex",
-  "version": "0.4.0",
+  "version": "0.6.0",
   "description": "Creative Exchange SDK for Javascript",
   "author": "Mateusz Luczak <mateusz.luczak@outlook.com>",
   "license": "MIT",
-  "main": "dist/crex.js",
-  "module": "dist/crex.es.js",
-  "jsnext:main": "dist/crex.es.js",
+  "main": "lib/index.js",
   "scripts": {
     "build": "npm run build:module && npm run build:browser",
-    "build:module": "rollup -c",
-    "build:browser": "rollup -c rollup.config.browser.js",
+    "build:module": "webpack",
+    "build:browser": "webpack -p --config webpack.config.umd.js",
     "test": "mocha test/**/*.js"
   },
+  "files": [
+    "lib",
+    "dist",
+    "README.md"
+  ],
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
     "mocha": "^3.3.0",
-    "rollup": "^0.41.6",
-    "rollup-plugin-commonjs": "^8.0.2",
-    "rollup-plugin-node-resolve": "^3.0.0",
-    "rollup-plugin-uglify": "^1.0.2"
+    "webpack": "^2.4.1"
   },
   "dependencies": {
+    "banner-webpack-plugin": "^0.2.3",
+    "object-assign": "^4.1.1",
     "superagent": "^3.5.2"
   }
 }

@@ -57,8 +57,8 @@ describe('Import', function() {
 
 	describe('#downloadPackage', function() {
 		it('should upload status', function() {
-			return expect(crex.importDownloadPackage({
-				'id': '3eeb6fb2-df64-4764-8d5d-7ee6746dbbdd'
+			return expect(crex.importUploadPackage({
+				'download': '4eb502dd-5e7a-4623-a141-e2503f8873c6'
 			})).to.eventually.be.a('object');
 		});
 	});

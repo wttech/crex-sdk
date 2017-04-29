@@ -1,0 +1,7 @@
+module.exports = {
+	entry: __dirname + '/lib/index.js',
+	output: {
+		filename: 'crex.js',
+		path: __dirname + '/dist'
+	}
+};
