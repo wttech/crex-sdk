@@ -1,3 +1,5 @@
+var fs = require('fs');
+var path = require('path');
 var chai = require('chai');
 var chaiAsPromised = require("chai-as-promised");
 
@@ -41,6 +43,22 @@ describe('Import', function() {
 		it('should return status', function() {
 			return expect(crex.importInstallPackage({
 				'id': '3c190d0a-91c3-4aa2-beaa-f17b5dbdd913'
+			})).to.eventually.be.a('object');
+		});
+	});
+
+	describe('#uploadPackage', function() {
+		it('should upload status', function() {
+			return expect(crex.importUploadPackage({
+				'file': fs.createReadStream(path.resolve(__dirname, 'test.zip'))
+			})).to.eventually.be.a('object');
+		});
+	});
+
+	describe('#downloadPackage', function() {
+		it('should upload status', function() {
+			return expect(crex.importDownloadPackage({
+				'id': '3eeb6fb2-df64-4764-8d5d-7ee6746dbbdd'
 			})).to.eventually.be.a('object');
 		});
 	});
