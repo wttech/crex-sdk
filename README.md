@@ -1,6 +1,5 @@
 <img width="250px" src="http://zg.cognifide.com/galaxite/img/zg_logo.svg">
 <br>
-
 ## Zen Garden Creative Exchange SDK for Javascript
 <a href="https://www.npmjs.com/package/crex"><img src="https://img.shields.io/npm/v/crex.svg" alt="Version"></a>
 <a href="https://www.npmjs.com/package/crex"><img src="https://img.shields.io/npm/l/crex.svg" alt="License"></a>
