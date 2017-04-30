@@ -1,0 +1,8 @@
+{
+  "templates": {
+    "systemName": "Creative Exchange JavaScript SDK",
+    "theme": "cosmo",
+    "inverseNav": true,
+    "linenums": true
+  }
+}

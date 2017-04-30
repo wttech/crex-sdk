@@ -2,10 +2,17 @@
 var program = require('commander');
 var ora = require('ora');
 var fs = require('fs');
+var util = require('util');
 var chalk = require('chalk');
 var path = require('path');
 var archiver = require('archiver');
 var CrEx = require('../lib/index');
+var auth = {};
+
+try {
+	auth = fs.readFileSync('auth.json', 'utf-8');
+	auth = JSON.parse(auth);
+} catch (err) { }
 
 function list(val) {
 	return val.split(',');
@@ -21,9 +28,13 @@ if (program.args.length < 1 && !program.compress) {
 	return program.help();
 }
 
+if (Object.keys(auth).length > 0) {
+	console.log(chalk.underline('Auth file found'));
+}
+
 var name = program.args[0];
 var spinner = ora('Compressing package...').start();
-var crex = new CrEx();
+var crex = new CrEx(auth);
 
 if (program.target) {
 	crex.setUrl(program.target);
@@ -65,7 +76,7 @@ new Promise((resolve, reject) => {
 		id: res.model.id
 	});
 }).then(() => {
-	spinner.succeed('Package ' + chalk.blue(name) + ' installed');
+	spinner.succeed(util.format('Package %s installed on %s', chalk.green(name), chalk.green(crex.getAddress())));
 }).catch((err) => {
-	spinner.fail(err);
+	spinner.fail(chalk.red(err));
 });

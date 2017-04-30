@@ -1,11 +1,18 @@
 #!/usr/bin/env node
 var fs = require('fs');
 var ora = require('ora');
+var util = require('util');
 var chalk = require('chalk');
 var program = require('commander');
 var poller = require('promise-poller');
 var Zip = require('adm-zip');
 var CrEx = require('../lib/index');
+var auth = {};
+
+try {
+	auth = fs.readFileSync('auth.json', 'utf-8');
+	auth = JSON.parse(auth);
+} catch (err) { }
 
 program
 	.usage('<path>')
@@ -17,8 +24,12 @@ if (program.args.length < 1) {
 	return program.help();
 }
 
+if (Object.keys(auth).length > 0) {
+	console.log(chalk.underline('Auth file found'));
+}
+
 var path = program.args[0];
-var crex = new CrEx();
+var crex = new CrEx(auth);
 var name = null;
 var spinner = ora('Exporting package...').start();
 
@@ -75,9 +86,9 @@ crex.exportCreatePackage({
 		fs.unlink(package, function(err){
 			if (err) return;
 		});
-		spinner.succeed('Package ' + chalk.blue(package) + ' downloaded and extracted to ' + chalk.blue(dest));
+		spinner.succeed(util.format('Package %s downloaded from %s and extracted to %s', chalk.green(package), chalk.green(crex.getAddress()), chalk.green(dest)));
 	} else {
-		spinner.succeed('Package ' + chalk.blue(package) + ' downloaded');
+		spinner.succeed(util.format('Package %s downloaded from %s', chalk.green(package), chalk.green(crex.getAddress())));
 	}
 }).catch((err) => {
 	spinner.fail(chalk.red(err));
