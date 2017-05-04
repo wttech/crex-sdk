@@ -14,14 +14,32 @@ try {
 	auth = JSON.parse(auth);
 } catch (err) { }
 
-function list(val) {
+const list = (val) => {
 	return val.split(',');
-}
+};
+
+const reportChanges = (data, type) => {
+	var messages = data[type.toLowerCase() + 'FilesAmended'].filter((file) => {
+		return file.action.type !== 'IGNORED';
+	});
+
+	if (messages.length === 0) {
+		return false;
+	}
+
+	console.log();
+	console.log(chalk.underline(util.format('%s files changed', type)));
+	messages.forEach((file) => {
+		const color = (file.action.type === 'CHANGED') ? 'green' : 'red';
+		console.log(util.format('%s %s', chalk[color](file.action.type), chalk.grey(file.path)));
+	});
+};
 
 program
 	.usage('<path to zip>')
 	.option('-t, --target <url>', 'specify target instance')
 	.option('-c, --compress <directories>', 'specify directories to be compressed', list)
+	.option('-i, --inspect', 'inspect package')
 	.parse(process.argv);
 
 if (program.args.length < 1 && !program.compress) {
@@ -71,12 +89,34 @@ new Promise((resolve, reject) => {
 		file: fs.createReadStream(name)
 	});
 }).then((res) => {
-	spinner.text = 'Installing package...';
-	return crex.importInstallPackage({
-		id: res.model.id
+	if (!program.inspect) {
+		spinner.text = 'Installing package...';
+		return crex.importInstallPackage({
+			id: res.model.id
+		});
+	} else {
+		spinner.text = 'Inspecting package...';
+		return crex.importInspectPackage({
+			id: res.model.id
+		});
+	}
+}).then((res) => {
+	fs.unlink('ce-import.zip', function(err){
+		if (err) return;
 	});
-}).then(() => {
-	spinner.succeed(util.format('Package %s installed on %s', chalk.green(name), chalk.green(crex.getAddress())));
+
+	const action = program.inspect ? 'inspected' : 'installed';
+	spinner.succeed(util.format('Package %s %s on %s', chalk.green(name), action, chalk.green(crex.getAddress())));
+	console.log();
+	res.themeStatuses.forEach((theme) => {
+		if (theme.themeAction !== 'IGNORED') {
+			console.log(util.format('Theme %s %s', chalk.blue(theme.themeName), theme.themeAction.toLowerCase()));
+		}
+	});
+	reportChanges(res, 'Js');
+	reportChanges(res, 'Css');
+	reportChanges(res, 'Other');
+	console.log();
 }).catch((err) => {
 	spinner.fail(chalk.red(err));
 });
