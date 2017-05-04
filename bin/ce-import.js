@@ -116,7 +116,6 @@ new Promise((resolve, reject) => {
 	reportChanges(res, 'Js');
 	reportChanges(res, 'Css');
 	reportChanges(res, 'Other');
-	console.log();
 }).catch((err) => {
 	spinner.fail(chalk.red(err));
 });
