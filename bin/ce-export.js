@@ -60,7 +60,8 @@ crex.exportCreatePackage({
 	return poller.default({
 		taskFn: function() {
 			return checkStatus(package.id)
-		}
+		},
+		retries: 10000
 	})
 }).then((id) => {
 	spinner.text = 'Downloading package...';
