@@ -5,7 +5,9 @@
 <a href="https://www.npmjs.com/package/crex"><img src="https://img.shields.io/npm/l/crex.svg" alt="License"></a>
 
 <br>
-<img width="200px" alt="Zen Garden logo" src="http://zg4.cognifide.com/content/dam/4.0%20Release%20Notes/logo.svg">
+<p align="center">
+    <img width="200px" alt="Zen Garden logo" src="http://zg4.cognifide.com/content/dam/4.0%20Release%20Notes/logo.svg">
+</p>
 <br>
 
 Creative Exchange SDK simplifies automation of Zen Garden theme development workflow. 
