@@ -1,8 +1,12 @@
-<img width="250px" src="http://zg.cognifide.com/galaxite/img/zg_logo.svg">
+![Cognifide logo](http://cognifide.github.io/images/cognifide-logo.png)
 
-## Zen Garden Creative Exchange SDK for Javascript
+# Zen Garden Creative Exchange SDK for Javascript
 <a href="https://www.npmjs.com/package/crex"><img src="https://img.shields.io/npm/v/crex.svg" alt="Version"></a>
 <a href="https://www.npmjs.com/package/crex"><img src="https://img.shields.io/npm/l/crex.svg" alt="License"></a>
+
+<br>
+<img width="200px" alt="Zen Garden logo" src="http://zg4.cognifide.com/content/dam/4.0%20Release%20Notes/logo.svg">
+<br>
 
 Creative Exchange SDK simplifies automation of Zen Garden theme development workflow. 
 It works both in Nodejs and in the browser, so it can be foundation for command line tools, electron apps, code editor plugins, browser monitoring tools and any other solutions that will make theme development easier for your organisation.
