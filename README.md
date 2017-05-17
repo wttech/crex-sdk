@@ -33,7 +33,7 @@ crex.exportGetAllPackages()
 ## Documentation 
 
 Full documentation can be found here:
-<https://cognifide.github.io/crex-sdk>
+<https://mateuszluczak.github.io/crex-sdk>
 
 ## CLI
 
