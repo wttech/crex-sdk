@@ -49,7 +49,7 @@ var checkStatus = (id) => {
 	});
 };
 
-path = (path.substring(1) === '/') ? path : '/' + path;
+path = (path.charAt(0) === '/') ? path : '/' + path;
 
 crex.exportCreatePackage({
 	roots: path,
