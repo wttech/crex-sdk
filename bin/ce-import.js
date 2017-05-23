@@ -10,7 +10,7 @@ var CrEx = require('../lib/index');
 var auth = {};
 
 try {
-	auth = fs.readFileSync('auth.json', 'utf-8');
+	auth = fs.readFileSync(process.cwd() + '/auth.json', 'utf-8');
 	auth = JSON.parse(auth);
 } catch (err) { }
 
