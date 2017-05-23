@@ -1,6 +1,6 @@
 {
   "name": "crex",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Creative Exchange SDK for Javascript",
   "author": "Mateusz Luczak <mateusz.luczak@outlook.com>",
   "license": "MIT",
@@ -8,6 +8,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Cognifide/crex-sdk"
+  },
+  "engines" : {
+    "node" : ">=6.10.0"
   },
   "homepage": "http://www.cognifide.com/our-technology/zengarden",
   "keywords": [
