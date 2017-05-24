@@ -90,7 +90,6 @@ crex.exportCreatePackage({
 					return;
 				}
 			}
-			console.log(path);
 			zip.extractEntryTo(zipEntry.entryName, dest + path, false, true);
 		});
 		fs.unlink(package, function(err){

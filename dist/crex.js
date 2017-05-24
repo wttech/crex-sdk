@@ -109,8 +109,11 @@ var doGet = function (url, args) {
 			.query(args)
 			.buffer(true)
 			.end(function (err, res) {
-				if (err || !res) reject(err);
-				resolve(res.body);
+				if (err || !res) {
+					reject(err);
+				} else {
+					resolve(res.body);
+				}
 			});
 	});
 };
@@ -122,8 +125,11 @@ var doPost = function(url, args) {
 			.type('form')
 			.send(args)
 			.end(function (err, res) {
-				if (err || !res) reject(err);
-				resolve(res.body);
+				if (err || !res) {
+					reject(err);
+				} else {
+					resolve(res.body);
+				}
 			});
 	});
 };
@@ -134,8 +140,11 @@ var doDelete = function(url, args) {
 			.delete(url)
 			.query(args)
 			.end(function (err, res) {
-				if (err) reject(err);
-				resolve(res.body);
+				if (err || !res) {
+					reject(err);
+				} else {
+					resolve(res.body);
+				}
 			});
 	});
 };
@@ -146,8 +155,11 @@ var doUpload = function(url, args) {
 			.post(url)
 			.attach('file', args['file'])
 			.end(function (err, res) {
-				if (err) reject(err);
-				resolve(res.body);
+				if (err || !res) {
+					reject(err);
+				} else {
+					resolve(res.body);
+				}
 			});
 	});
 }
@@ -160,8 +172,11 @@ var doDownload = function(url, args) {
 			.buffer(true)
 			.parse(nodeBinaryParser)
 			.end(function (err, res) {
-				if (err) reject(err);
-				resolve(res.body);
+				if (err || !res) {
+					reject(err);
+				} else {
+					resolve(res.body);
+				}
 			});
 	});
 }
@@ -219,7 +234,8 @@ CrEx.prototype.getUrl = function () {
 };
 
 CrEx.prototype.getAddress = function () {
-	return this.url + ':' + this.port;
+	var url = this.url;
+	return this.port !== '' ? url + ':' + this.port : url;
 }
 
 CrEx.prototype.request = function(method, url, args) {
