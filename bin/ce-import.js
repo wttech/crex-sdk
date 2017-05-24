@@ -36,7 +36,7 @@ const reportChanges = (data, type) => {
 };
 
 program
-	.usage('<path to zip>')
+	.usage('[path to zip]')
 	.option('-t, --target <url>', 'specify target instance')
 	.option('-c, --compress <directories>', 'specify directories to be compressed', list)
 	.option('-i, --inspect', 'inspect package')
