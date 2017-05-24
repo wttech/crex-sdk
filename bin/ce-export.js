@@ -18,6 +18,7 @@ program
 	.usage('<path>')
 	.option('-t, --target <url>', 'specify target instance')
 	.option('-x, --extract [destination]', 'extract downloaded package')
+	.option('-f, --filter <directory>', 'filter specific directory', '/')
 	.parse(process.argv);
 
 if (program.args.length < 1) {
@@ -29,9 +30,10 @@ if (Object.keys(auth).length > 0) {
 }
 
 var path = program.args[0];
+var filter = program.filter;
 var crex = new CrEx(auth);
 var name = null;
-var spinner = ora('Exporting package...').start();
+var spinner = ora(util.format('Exporting package from %s...', chalk.green(crex.getAddress()))).start();
 
 if (program.target) {
 	crex.setUrl(program.target);
@@ -50,6 +52,7 @@ var checkStatus = (id) => {
 };
 
 path = (path.charAt(0) === '/') ? path : '/' + path;
+filter = (filter.charAt(0) === '/') ? filter : '/' + filter;
 
 crex.exportCreatePackage({
 	roots: path,
@@ -82,6 +85,12 @@ crex.exportCreatePackage({
 		var zipEntries = zip.getEntries();
 		zipEntries.forEach(function(zipEntry) {
 			var path = '/' + zipEntry.entryName.split('/').slice(1, -1).join('/');
+			if (program.filter) {
+				if (!path.startsWith(filter)) {
+					return;
+				}
+			}
+			console.log(path);
 			zip.extractEntryTo(zipEntry.entryName, dest + path, false, true);
 		});
 		fs.unlink(package, function(err){
