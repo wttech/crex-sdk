@@ -76,7 +76,9 @@ new Promise((resolve, reject) => {
 
 		program.compress.forEach((folder) => {
 			const path = folder.split('/').pop();
-			zip.directory(folder + '/', path);
+			zip.glob(path + '/**/*', {
+				ignore: '**/node_modules/**'
+			});
 		});
 
 		zip.finalize();
