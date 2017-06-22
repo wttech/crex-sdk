@@ -14,11 +14,15 @@ try {
 	auth = JSON.parse(auth);
 } catch (err) { }
 
+const list = (val) => {
+	return val.split(',');
+};
+
 program
 	.usage('<path>')
 	.option('-t, --target <url>', 'specify target instance')
 	.option('-x, --extract [destination]', 'extract downloaded package')
-	.option('-f, --filter <directory>', 'filter specific directory', '/')
+	.option('-f, --filter <paths>', 'filter specific paths to be extracted', list, ['/'])
 	.parse(process.argv);
 
 if (program.args.length < 1) {
@@ -30,7 +34,7 @@ if (Object.keys(auth).length > 0) {
 }
 
 var path = program.args[0];
-var filter = program.filter;
+var filters = program.filter.map((filter) => (filter.charAt(0) === '/') ? filter : '/' + filter);
 var crex = new CrEx(auth);
 var name = null;
 var spinner = ora(util.format('Exporting package from %s...', chalk.green(crex.getAddress()))).start();
@@ -52,7 +56,6 @@ var checkStatus = (id) => {
 };
 
 path = (path.charAt(0) === '/') ? path : '/' + path;
-filter = (filter.charAt(0) === '/') ? filter : '/' + filter;
 
 crex.exportCreatePackage({
 	roots: path,
@@ -85,11 +88,11 @@ crex.exportCreatePackage({
 		var zipEntries = zip.getEntries();
 		zipEntries.forEach(function(zipEntry) {
 			var path = '/' + zipEntry.entryName.split('/').slice(1, -1).join('/');
-			if (program.filter) {
-				if (!path.startsWith(filter)) {
-					return;
-				}
+
+			if (filters.every((filter) => !path.startsWith(filter))) {
+				return false;
 			}
+
 			zip.extractEntryTo(zipEntry.entryName, dest + path, false, true);
 		});
 		fs.unlink(package, function(err){
