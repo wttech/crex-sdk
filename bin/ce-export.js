@@ -12,7 +12,12 @@ var auth = {};
 try {
 	auth = fs.readFileSync(process.cwd() + '/auth.json', 'utf-8');
 	auth = JSON.parse(auth);
-} catch (err) { }
+} catch (err) {
+	if (err.code !== 'ENOENT') {
+		console.log(chalk.red('Auth.json: ' + err.toString()));
+	}
+	process.exit();
+}
 
 const list = (val) => {
 	return val.split(',');
