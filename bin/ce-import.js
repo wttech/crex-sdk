@@ -15,8 +15,8 @@ try {
 } catch (err) {
 	if (err.code !== 'ENOENT') {
 		console.log(chalk.red('Auth.json: ' + err.toString()));
+		process.exit();
 	}
-	process.exit();
 }
 
 const list = (val) => {
