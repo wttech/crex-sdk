@@ -30,7 +30,7 @@ crex.exportGetAllPackages()
   .catch((err) => console.log(err));
 ```
 
-## Documentation 
+## SDK Documentation 
 
 Full documentation can be found here:
 <https://mateuszluczak.github.io/crex-sdk>
@@ -43,17 +43,10 @@ Package can also be installed globally as a CLI
 $ npm install crex -g
 ```
 
-#### Exporting package
+#### CLI Documentation
 
-```bash
-$ ce export /content/showcase/default/en_gb/home -x
-```
-
-#### Importing package
-
-```bash
-$ ce import -c etc
-```
+Full documentation can be found here:
+<https://github.com/Cognifide/crex-sdk/wiki/CLI-Usage>
 
 ## License 
 MIT
