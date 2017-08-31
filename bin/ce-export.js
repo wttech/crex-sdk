@@ -28,6 +28,7 @@ program
 	.option('-t, --target <url>', 'specify target instance')
 	.option('-x, --extract [destination]', 'extract downloaded package')
 	.option('-f, --filter <paths>', 'filter specific paths to be extracted', list, ['/'])
+	.option('-e, --env <name>', 'specify environment from auth.json')
 	.parse(process.argv);
 
 if (program.args.length < 1) {
@@ -40,7 +41,12 @@ if (Object.keys(auth).length > 0) {
 
 var path = program.args[0];
 var filters = program.filter.map((filter) => (filter.charAt(0) === '/') ? filter : '/' + filter);
-var crex = new CrEx(auth);
+var creds = program.env ? auth[program.env] : auth;
+if (typeof creds === 'undefined') {
+	console.log(chalk.red(util.format('No such environment as "%s" in Auth file', program.env)));
+	process.exit();
+}
+var crex = new CrEx(creds);
 var name = null;
 var spinner = ora(util.format('Exporting package from %s...', chalk.green(crex.getAddress()))).start();
 

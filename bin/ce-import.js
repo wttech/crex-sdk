@@ -37,10 +37,10 @@ const reportChanges = (data, type) => {
 	}
 
 	console.log();
-	console.log(chalk.underline(util.format('%s files changed', type)));
+	console.log(chalk.underline(util.format('%s files changed:\n', type)));
 	messages.forEach((file) => {
 		const color = (file.action.type === 'CHANGED') ? 'green' : 'red';
-		console.log(util.format('%s %s', chalk[color](file.action.type), chalk.grey(file.path)));
+		console.log(util.format('    %s %s', chalk[color](file.action.type.toLowerCase() + ':'), '   ' + chalk[color](file.path)));
 	});
 };
 
@@ -49,6 +49,7 @@ program
 	.option('-t, --target <url>', 'specify target instance')
 	.option('-c, --compress <directories>', 'specify directories to be compressed', list)
 	.option('-i, --inspect', 'inspect package')
+	.option('-e, --env <name>', 'specify environment from auth.json')
 	.parse(process.argv);
 
 if (program.args.length < 1 && !program.compress) {
@@ -60,8 +61,13 @@ if (Object.keys(auth).length > 0) {
 }
 
 var name = program.args[0];
+var creds = program.env ? auth[program.env] : auth;
+if (typeof creds === 'undefined') {
+	console.log(chalk.red(util.format('No such environment as "%s" in Auth file', program.env)));
+	process.exit();
+}
+var crex = new CrEx(creds);
 var spinner = ora('Compressing package...').start();
-var crex = new CrEx(auth);
 
 if (program.target) {
 	crex.setUrl(program.target);
@@ -95,7 +101,7 @@ new Promise((resolve, reject) => {
 		resolve();
 	}
 }).then(() => {
-	spinner.text = 'Uploading package...';
+	spinner.text = util.format('Uploading package to %s...', chalk.green(crex.getAddress()));
 	return crex.importUploadPackage({
 		file: fs.createReadStream(name)
 	});
@@ -138,14 +144,14 @@ new Promise((resolve, reject) => {
 	if (res.themeStatuses.filter((theme) => theme.themeAction !== 'IGNORED').length > 0) {
 		console.log();
 	}
+	console.log(chalk.underline("Themes affected:\n"));
 	res.themeStatuses.forEach((theme) => {
-		if (theme.themeAction !== 'IGNORED') {
-			console.log(util.format('Theme %s %s', chalk.blue(theme.themeName), theme.themeAction.toLowerCase()));
-		}
+		console.log(util.format('    %s %s', chalk.blue(theme.themeName + ':'),'   ' + theme.themeAction.toLowerCase()));
 	});
-	reportChanges(res, 'Js');
 	reportChanges(res, 'Css');
+	reportChanges(res, 'Js');
 	reportChanges(res, 'Other');
+	console.log();
 }).catch((err) => {
 	spinner.fail(chalk.red(err));
 });
