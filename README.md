@@ -42,7 +42,9 @@ Package can also be installed globally as a CLI
 ```bash
 $ npm install crex -g
 ```
-
+```bash
+$ ce --help
+```
 #### CLI Documentation
 
 Full documentation can be found here:
