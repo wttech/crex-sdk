@@ -23,6 +23,10 @@ const list = (val) => {
 	return val.split(',');
 };
 
+const stripHtml = (text) => {
+	return text.replace('<br>', ' ').replace(/<(?:.|\n)*?>/gm, '');
+}
+
 const reportChanges = (data, type) => {
 	var messages = data[type.toLowerCase() + 'FilesAmended'].filter((file) => {
 		return file.action.type !== 'IGNORED';
@@ -115,6 +119,25 @@ new Promise((resolve, reject) => {
 	const action = program.inspect ? 'inspected' : 'installed';
 	spinner.succeed(util.format('Package %s %s on %s', chalk.green(name), action, chalk.green(crex.getAddress())));
 	console.log();
+	const warnings = res.messages.filter((message) => message.type === 'WARNING').length;
+	const errors = res.messages.filter((message) => message.type === 'ERROR').length;
+	console.log(chalk.yellow('⚠') + util.format(' %s warnings', warnings));
+	console.log(chalk.red('✖')  + util.format(' %s errors\n', errors));
+	res.messages.forEach((message) => {
+		var text = stripHtml(message.messageText);
+
+		switch (message.type) {
+			case 'WARNING':
+				console.log(chalk.yellow('Warning: ' + text));
+				break;
+			case 'ERROR':
+				console.log(chalk.red('Error: ' + text));
+				break;
+		}
+	});
+	if (res.themeStatuses.filter((theme) => theme.themeAction !== 'IGNORED').length > 0) {
+		console.log();
+	}
 	res.themeStatuses.forEach((theme) => {
 		if (theme.themeAction !== 'IGNORED') {
 			console.log(util.format('Theme %s %s', chalk.blue(theme.themeName), theme.themeAction.toLowerCase()));
