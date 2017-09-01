@@ -7,6 +7,7 @@ var chalk = require('chalk');
 var path = require('path');
 var archiver = require('archiver');
 var CrEx = require('../lib/index');
+var poller = require('promise-poller');
 var auth = {};
 
 try {
@@ -50,6 +51,7 @@ program
 	.option('-c, --compress <directories>', 'specify directories to be compressed', list)
 	.option('-i, --inspect', 'inspect package')
 	.option('-e, --env <name>', 'specify environment from auth.json')
+	.option('-a, --activate', 'activate after install')
 	.parse(process.argv);
 
 if (program.args.length < 1 && !program.compress) {
@@ -72,6 +74,18 @@ var spinner = ora('Compressing package...').start();
 if (program.target) {
 	crex.setUrl(program.target);
 }
+
+var checkStatus = (id) => {
+	return new Promise((resolve, reject) => {
+		return crex.themesCheckActivateProgress({id: id})
+			.then(function (res) {
+				if (res.status !== 'DONE') {
+					reject(id);
+				}
+				resolve(id);
+			});
+	});
+};
 
 new Promise((resolve, reject) => {
 	if (program.compress) {
@@ -123,6 +137,7 @@ new Promise((resolve, reject) => {
 	});
 
 	const action = program.inspect ? 'inspected' : 'installed';
+	const themesToActivate = [];
 	spinner.succeed(util.format('Package %s %s on %s', chalk.green(name), action, chalk.green(crex.getAddress())));
 	console.log();
 	const warnings = res.messages.filter((message) => message.type === 'WARNING').length;
@@ -146,12 +161,39 @@ new Promise((resolve, reject) => {
 	}
 	console.log(chalk.underline("Themes affected:\n"));
 	res.themeStatuses.forEach((theme) => {
-		console.log(util.format('    %s %s', chalk.blue(theme.themeName + ':'),'   ' + theme.themeAction.toLowerCase()));
+		if (theme.themeAction !== 'IGNORED' && theme.themeAction !== 'UNTOUCHED') {
+			themesToActivate.push(theme.themePath);
+		}
+		const color = (theme.themeAction.toLowerCase() === 'changed') ? chalk.green : chalk.grey;
+		console.log(util.format('    %s %s', theme.themePath + ':','   ' + color(theme.themeAction.toLowerCase())));
 	});
+
+
 	reportChanges(res, 'Css');
 	reportChanges(res, 'Js');
 	reportChanges(res, 'Other');
 	console.log();
+	if (themesToActivate.length > 0 && program.activate && !program.inspect) {
+		spinner = ora('Activating package...').start();
+		return crex.themesActivateThemes({themes: JSON.stringify(themesToActivate)});
+	} else {
+		return false;
+	}
+}).then((package) => {
+	if (!package) {
+		return false;
+	}
+	return poller.default({
+		taskFn: function () {
+			return checkStatus(package.id)
+		},
+		retries: 10000
+	})
+}).then((res) => {
+	if (!res) {
+		return false;
+	}
+	spinner.succeed(util.format('Package %s activated', chalk.green(name)));
 }).catch((err) => {
 	spinner.fail(chalk.red(err));
 });
