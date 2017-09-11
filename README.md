@@ -6,7 +6,7 @@
 
 <br>
 <p align="center">
-    <img width="200px" alt="Zen Garden logo" src="http://zg4.cognifide.com/content/dam/4.0%20Release%20Notes/logo.svg">
+    <img width="300px" alt="Zen Garden logo" src="http://assets.cognifide.com/zg/logos/ce-sdk.png">
 </p>
 <br>
 
