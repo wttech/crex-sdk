@@ -9,8 +9,8 @@
     "type": "git",
     "url": "https://github.com/Cognifide/crex-sdk"
   },
-  "engines" : {
-    "node" : ">=6.10.0"
+  "engines": {
+    "node": ">=6.10.0"
   },
   "homepage": "http://www.cognifide.com/our-technology/zengarden",
   "keywords": [
@@ -58,6 +58,7 @@
     "ora": "^1.2.0",
     "promise-poller": "^1.5.2",
     "superagent": "^3.5.2",
+    "superagent-proxy": "^1.0.2",
     "yazl": "^2.4.2"
   }
 }
