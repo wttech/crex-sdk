@@ -1,6 +1,6 @@
 {
   "name": "crex",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "description": "Creative Exchange SDK for Javascript",
   "author": "Mateusz Luczak <mateusz.luczak@outlook.com>",
   "license": "MIT",
@@ -26,9 +26,8 @@
     "ce-export": "bin/ce-export.js"
   },
   "scripts": {
-    "build": "npm run build:module && npm run build:browser",
+    "build": "npm run build:module",
     "build:module": "webpack",
-    "build:browser": "webpack -p --config webpack.config.umd.js",
     "jsdoc": "jsdoc -c ./conf.json -d generated-docs -t ./node_modules/ink-docstrap/template -R docs/README.md -r ./lib",
     "publish-docs": "rm -rf generated-docs && npm run jsdoc && gh-pages -d generated-docs",
     "test": "mocha test/**/*.js"
@@ -47,6 +46,7 @@
     "ink-docstrap": "^1.3.0",
     "jsdoc": "^3.4.3",
     "mocha": "^3.3.0",
+    "socks-proxy-agent": "^3.0.1",
     "webpack": "^2.4.1"
   },
   "dependencies": {
