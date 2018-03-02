@@ -3209,9 +3209,10 @@ var nodeBinaryParser = function (res, done) {
 	});
 };
 
-var doGet = function (url, args, proxy) {
+var doGet = function (url, args, config) {
 	return new Promise(function (resolve, reject) {
-		checkProxy(request.get(url), proxy)
+		checkProxy(request.get(url), config.proxy)
+			.auth(config.user, config.password)
 			.query(args)
 			.buffer(true)
 			.end(function (err, res) {
@@ -3224,9 +3225,10 @@ var doGet = function (url, args, proxy) {
 	});
 };
 
-var doPost = function(url, args, proxy) {
+var doPost = function(url, args, config) {
 	return new Promise(function (resolve, reject) {
-		checkProxy(request.post(url), proxy)
+		checkProxy(request.post(url), config.proxy)
+			.auth(config.user, config.password)
 			.type('form')
 			.send(args)
 			.end(function (err, res) {
@@ -3239,9 +3241,10 @@ var doPost = function(url, args, proxy) {
 	});
 };
 
-var doDelete = function(url, args, proxy) {
+var doDelete = function(url, args, config) {
 	return new Promise(function (resolve, reject) {
-		checkProxy(request.delete(url), proxy)
+		checkProxy(request.delete(url), config.proxy)
+			.auth(config.user, config.password)
 			.query(args)
 			.end(function (err, res) {
 				if (err || !res) {
@@ -3253,9 +3256,10 @@ var doDelete = function(url, args, proxy) {
 	});
 };
 
-var doUpload = function(url, args, proxy) {
+var doUpload = function(url, args, config) {
 	return new Promise(function (resolve, reject) {
-		checkProxy(request.post(url), proxy)
+		checkProxy(request.post(url), config.proxy)
+			.auth(config.user, config.password)
 			.attach('file', args['file'])
 			.end(function (err, res) {
 				if (err || !res) {
@@ -3267,9 +3271,10 @@ var doUpload = function(url, args, proxy) {
 	});
 }
 
-var doDownload = function(url, args, proxy) {
+var doDownload = function(url, args, config) {
 	return new Promise(function (resolve, reject) {
-		checkProxy(request.get(url), proxy)
+		checkProxy(request.get(url), config.proxy)
+			.auth(config.user, config.password)
 			.query(args)
 			.buffer(true)
 			.parse(nodeBinaryParser)
@@ -16888,7 +16893,7 @@ CrEx.prototype.getAddress = function () {
 
 CrEx.prototype.request = function(method, url, args) {
 	var req = null;
-	url = this.getUrl() + url;
+	url = this.url + url;
 
 	switch (method) {
 		case 'GET':
@@ -16908,7 +16913,7 @@ CrEx.prototype.request = function(method, url, args) {
 			break;
 	}
 
-	return req(url, args, this.proxy);
+	return req(url, args, this);
 };
 
 CrEx.prototype = assign(CrEx.prototype, api);
