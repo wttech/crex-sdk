@@ -16893,7 +16893,7 @@ CrEx.prototype.getAddress = function () {
 
 CrEx.prototype.request = function(method, url, args) {
 	var req = null;
-	url = this.url + url;
+	url = this.getUrl() + url;
 
 	switch (method) {
 		case 'GET':
