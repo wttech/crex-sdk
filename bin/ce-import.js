@@ -132,9 +132,9 @@ new Promise((resolve, reject) => {
 		});
 	}
 }).then((res) => {
-	// fs.unlink('ce-import.zip', function(err){
-	// 	if (err) return;
-	// });
+	fs.unlink('ce-import.zip', function(err){
+		if (err) return;
+	});
 
 	const action = program.inspect ? 'inspected' : 'installed';
 	const themesToActivate = [];
