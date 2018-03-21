@@ -104,7 +104,7 @@ new Promise((resolve, reject) => {
 		});
 
 		program.compress.forEach((folder) => {
-			const path = folder.split('/').pop();
+			const path = folder.replace(/^\/+/g, '');
 			zip.glob(path + '/**/*', {
 				ignore: '**/node_modules/**'
 			});
@@ -132,9 +132,9 @@ new Promise((resolve, reject) => {
 		});
 	}
 }).then((res) => {
-	fs.unlink('ce-import.zip', function(err){
-		if (err) return;
-	});
+	// fs.unlink('ce-import.zip', function(err){
+	// 	if (err) return;
+	// });
 
 	const action = program.inspect ? 'inspected' : 'installed';
 	const themesToActivate = [];
