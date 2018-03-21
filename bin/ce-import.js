@@ -104,7 +104,7 @@ new Promise((resolve, reject) => {
 		});
 
 		program.compress.forEach((folder) => {
-			const path = folder.split('/').pop();
+			const path = folder.replace(/^\/+/g, '');
 			zip.glob(path + '/**/*', {
 				ignore: '**/node_modules/**'
 			});
