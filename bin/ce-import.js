@@ -147,7 +147,7 @@ new Promise((resolve, reject) => {
 	const warnings = res.messages.filter((message) => message.type === 'WARNING').length;
 	const errors = res.messages.filter((message) => message.type === 'ERROR').length;
 	console.log(chalk.yellow('⚠') + util.format(' %s warnings', warnings));
-	console.log(chalk.red('✖')  + util.format(' %s errors\n', errors));
+	console.log(chalk.red('✖')  + util.format(' %s errors', errors));
 	res.messages.forEach((message) => {
 		var text = stripHtml(message.messageText);
 
@@ -160,10 +160,7 @@ new Promise((resolve, reject) => {
 				break;
 		}
 	});
-	if (res.themeStatuses.filter((theme) => theme.themeAction !== 'IGNORED').length > 0) {
-		console.log();
-	}
-	console.log(chalk.underline("Themes affected:\n"));
+	console.log(chalk.underline("\nThemes affected:\n"));
 	res.themeStatuses.forEach((theme) => {
 		if (theme.themeAction !== 'IGNORED' && theme.themeAction !== 'UNTOUCHED') {
 			themesToActivate.push(theme.themePath);
