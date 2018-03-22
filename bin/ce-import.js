@@ -49,6 +49,7 @@ program
 	.usage('[path to zip]')
 	.option('-t, --target <url>', 'specify target instance')
 	.option('-c, --compress <directories>', 'specify directories to be compressed', list)
+	.option('-o, --omit <globs>', 'specify globs to be ommited when creating zip', list)
 	.option('-i, --inspect', 'inspect package')
 	.option('-e, --env <name>', 'specify environment from auth.json')
 	.option('-a, --activate', 'activate after install')
@@ -64,6 +65,8 @@ if (Object.keys(auth).length > 0) {
 
 var name = program.args[0];
 var creds = program.env ? auth[program.env] : auth;
+var omit = program.omit ? program.omit : '**/node_modules/**';
+
 if (typeof creds === 'undefined') {
 	console.log(chalk.red(util.format('No such environment as "%s" in Auth file', program.env)));
 	process.exit();
@@ -106,7 +109,8 @@ new Promise((resolve, reject) => {
 		program.compress.forEach((folder) => {
 			const path = folder.replace(/^\/+/g, '');
 			zip.glob(path + '/**/*', {
-				ignore: '**/node_modules/**'
+				dot: true,
+				ignore: omit
 			});
 		});
 
