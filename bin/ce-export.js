@@ -39,7 +39,7 @@ if (Object.keys(auth).length > 0) {
 	console.log(chalk.underline('Auth file found'));
 }
 
-var path = program.args[0];
+var paths = program.args[0].split(',');
 var filters = program.filter.map((filter) => (filter.charAt(0) === '/') ? filter : '/' + filter);
 var creds = program.env ? auth[program.env] : auth;
 if (typeof creds === 'undefined') {
@@ -66,10 +66,10 @@ var checkStatus = (id) => {
 	});
 };
 
-path = (path.charAt(0) === '/') ? path : '/' + path;
+paths = paths.map((path) => (path.charAt(0) === '/') ? path : '/' + path);
 
 crex.exportCreatePackage({
-	roots: path,
+	roots: paths,
 	force: true,
 	engine: 'Simple'
 }).then((package) => {
