@@ -62,6 +62,8 @@ var checkStatus = (id) => {
 					reject(id);
 				}
 				resolve(id);
+			}, function () {
+				reject(false);
 			});
 	});
 };
@@ -114,5 +116,8 @@ crex.exportCreatePackage({
 		spinner.succeed(util.format('Package %s downloaded from %s', chalk.green(package), chalk.green(crex.getAddress())));
 	}
 }).catch((err) => {
+	if (typeof err !== 'string' ) {
+		err = 'Error: Incorrect path(s).'
+	}
 	spinner.fail(chalk.red(err));
 });
