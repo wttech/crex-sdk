@@ -3216,6 +3216,7 @@ var doGet = function (url, args, config) {
 			.query(args)
 			.buffer(true)
 			.end(function (err, res) {
+				console.log(res.status)
 				if (err || !res || !Object.keys(res.body).length) {
 					reject(err);
 				} else {
@@ -16889,26 +16890,26 @@ var CrEx = function (options) {
 	this.url = options.url;
 	this.port = options.port;
 	this.proxy = options.proxy;
-
-	this.full = this.user + ':' + this.password + '@' + this.url + ':' + this.port;
-};
-
-CrEx.prototype.setUrl = function (url) {
-	this.full = url;
-};
-
-CrEx.prototype.getUrl = function () {
-	return this.full;
 };
 
 CrEx.prototype.getAddress = function () {
 	var url = this.url;
 	return (this.port !== '' ? url + ':' + this.port : url) + (this.proxy ? ' (proxy: ' + this.proxy + ')' : '');
-}
+};
+
+CrEx.prototype.setTarget = function (target) {
+	var credentials = target.substr(0, target.lastIndexOf('@')).split(':');
+	var address = target.substr(target.lastIndexOf('@') + 1).split(':');
+	
+	this.user = credentials[0];
+	this.password = credentials[1];
+	this.url = address[0];
+	this.port = address.length > 1 ? address[1] : '';
+};
 
 CrEx.prototype.request = function(method, url, args) {
 	var req = null;
-	url = this.getUrl() + url;
+	url = this.getAddress() + url;
 
 	switch (method) {
 		case 'GET':
