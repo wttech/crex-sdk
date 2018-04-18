@@ -48,12 +48,12 @@ if (typeof creds === 'undefined') {
 }
 var crex = new CrEx(creds);
 var name = null;
-var spinner = ora(util.format('Exporting package from %s...', chalk.green(crex.getAddress()))).start();
 
 if (program.target) {
-	crex.setUrl(program.target);
+	crex.setTarget(program.target);
 }
 
+var spinner = ora(util.format('Exporting package from %s...', chalk.green(crex.getAddress()))).start();
 var checkStatus = (id) => {
 	return new Promise((resolve, reject) => {
 		return crex.exportGetPackageStatus({id: id})
@@ -117,7 +117,7 @@ crex.exportCreatePackage({
 	}
 }).catch((err) => {
 	if (typeof err !== 'string' ) {
-		err = 'Error: Incorrect path(s).'
+		err = 'Error: Something went wrong. Check passed parameters.'
 	}
 	spinner.fail(chalk.red(err));
 });

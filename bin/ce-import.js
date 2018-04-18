@@ -75,7 +75,7 @@ var crex = new CrEx(creds);
 var spinner = ora('Compressing package...').start();
 
 if (program.target) {
-	crex.setUrl(program.target);
+	crex.setTarget(program.target);
 }
 
 var checkStatus = (id) => {
