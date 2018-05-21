@@ -1,6 +1,6 @@
 {
   "name": "crex",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "Creative Exchange SDK for Javascript",
   "author": "Mateusz Luczak <mateusz.luczak@outlook.com>",
   "license": "MIT",
@@ -59,7 +59,7 @@
     "promise-poller": "^1.5.2",
     "superagent": "^3.5.2",
     "superagent-proxy": "^1.0.2",
-    "theme-bump": "^1.0.1",
+    "theme-bump": "^1.1.0",
     "yazl": "^2.4.2"
   }
 }
