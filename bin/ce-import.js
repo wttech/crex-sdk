@@ -10,6 +10,7 @@ var CrEx = require('../lib/index');
 var bump = require('theme-bump');
 var poller = require('promise-poller');
 var auth = {};
+var versionsUpdated = {};
 
 try {
 	auth = fs.readFileSync(process.cwd() + '/auth.json', 'utf-8');
@@ -108,24 +109,20 @@ new Promise((resolve, reject) => {
 			reject(err);
 		});
 
-		if (program.bump) {
-			spinner.text = 'Bumping version...';
-			const info = bump(process.cwd(), program.bump);
-			console.log();
-			Object.keys(info).forEach((theme) => {
-				console.log(util.format('Theme %s version bumped to %s', chalk.green(info[theme].title.toLowerCase()), chalk.green(info[theme].version)));
-			});
-		}
-
-		spinner.text = 'Compressing package...';
-
 		program.compress.forEach((folder) => {
 			const path = folder.replace(/^\/+/g, '');
+
+			if (program.bump) {
+				versionsUpdated = Object.assign({}, versionsUpdated, bump(path, program.bump));
+			}
+
 			zip.glob(path + '/**/*', {
 				dot: true,
 				ignore: omit
 			});
 		});
+
+		spinner.text = 'Compressing package...';
 
 		zip.finalize();
 	} else {
@@ -179,7 +176,9 @@ new Promise((resolve, reject) => {
 			themesToActivate.push(theme.themePath);
 		}
 		const color = (theme.themeAction.toLowerCase() === 'changed') ? chalk.green : chalk.grey;
-		console.log(util.format('    %s %s', theme.themePath + ':','   ' + color(theme.themeAction.toLowerCase())));
+		const version = versionsUpdated[theme.themePath.substring(1)];
+		const versionInfo = (version && version.old !== version.new) ? util.format('(version %s ➔ %s)', version.old, version.new) : '';
+		console.log(util.format('    %s %s %s', theme.themePath + ':','   ' + color(theme.themeAction.toLowerCase()), chalk.blue(versionInfo)));
 	});
 
 
