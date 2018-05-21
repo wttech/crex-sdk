@@ -3216,7 +3216,6 @@ var doGet = function (url, args, config) {
 			.query(args)
 			.buffer(true)
 			.end(function (err, res) {
-				console.log(res.status)
 				if (err || !res || !Object.keys(res.body).length) {
 					reject(err);
 				} else {
