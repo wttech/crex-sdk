@@ -7,6 +7,7 @@ var chalk = require('chalk');
 var path = require('path');
 var archiver = require('archiver');
 var CrEx = require('../lib/index');
+var bump = require('theme-bump');
 var poller = require('promise-poller');
 var auth = {};
 
@@ -49,10 +50,11 @@ program
 	.usage('[path to zip]')
 	.option('-t, --target <url>', 'specify target instance')
 	.option('-c, --compress <directories>', 'specify directories to be compressed', list)
-	.option('-o, --omit <globs>', 'specify globs to be ommited when creating zip', list)
+	.option('-o, --omit <globs>', 'specify globs to be omitted when creating zip', list)
 	.option('-i, --inspect', 'inspect package')
 	.option('-e, --env <name>', 'specify environment from auth.json')
 	.option('-a, --activate', 'activate after install')
+	.option('-b, --bump [version]', 'bump version in non-protected themes', 'patch')
 	.parse(process.argv);
 
 if (program.args.length < 1 && !program.compress) {
@@ -105,6 +107,17 @@ new Promise((resolve, reject) => {
 		zip.on('error', function(err) {
 			reject(err);
 		});
+
+		if (program.bump) {
+			spinner.text = 'Bumping version...';
+			const info = bump(process.cwd(), program.bump);
+			console.log();
+			Object.keys(info).forEach((theme) => {
+				console.log(util.format('Theme %s version bumped to %s', chalk.green(info[theme].title.toLowerCase()), chalk.green(info[theme].version)));
+			});
+		}
+
+		spinner.text = 'Compressing package...';
 
 		program.compress.forEach((folder) => {
 			const path = folder.replace(/^\/+/g, '');
