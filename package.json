@@ -1,65 +1,30 @@
 {
-  "name": "crex",
-  "version": "1.7.2",
-  "description": "Creative Exchange SDK for Javascript",
-  "author": "Mateusz Luczak <mateusz.luczak@outlook.com>",
-  "license": "MIT",
-  "main": "lib/index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Cognifide/crex-sdk"
-  },
-  "engines": {
-    "node": ">=6.10.0"
-  },
-  "homepage": "http://www.cognifide.com/our-technology/zengarden",
-  "keywords": [
-    "aem",
-    "sdk",
-    "creative exchange",
-    "cli"
+  "name": "content-showcase-default-en_gb-2018-05-25T09-14-29",
+  "version": "1.0.0",
+  "subPackages": [
+    "/etc/designs/zg/showcase/desktop",
+    "/etc/designs/zg/basic/desktop"
   ],
-  "bugs": "https://github.com/Cognifide/crex-sdk/issues",
-  "bin": {
-    "ce": "bin/ce.js",
-    "ce-import": "bin/ce-import.js",
-    "ce-export": "bin/ce-export.js"
+  "config": {
+    "engine": "Simple",
+    "rootPaths": [
+      "/content/showcase/default/en_gb/home/components/common/box"
+    ]
   },
   "scripts": {
-    "build": "npm run build:module",
-    "build:module": "webpack",
-    "jsdoc": "jsdoc -c ./conf.json -d generated-docs -t ./node_modules/ink-docstrap/template -R docs/README.md -r ./lib",
-    "publish-docs": "rm -rf generated-docs && npm run jsdoc && gh-pages -d generated-docs",
-    "test": "mocha test/**/*.js"
+    "postinstall": "subpkg install",
+    "build": "subpkg build",
+    "dev": "subpkg run dev",
+    "serve": "cross-var browser-sync start --startPath $npm_package_config_rootPaths_0.html -s --directory --serveStatic \".\" -f \"**/*.css,**/*.js,**/*.html\" --no-inject-changes --reload-delay 500",
+    "start": "concurrently -p \"[{name}]\" -n \"SYNC,WATCH\" -c \"cyan,green\" \"npm run serve\" \"npm run dev\"",
+    "update": "cross-var ce export $npm_package_config_rootPaths_0 -x -f content",
+    "deploy": "npm run build \u0026\u0026 ce import -c etc"
   },
-  "files": [
-    "bin",
-    "lib",
-    "dist",
-    "README.md"
-  ],
   "devDependencies": {
-    "banner-webpack-plugin": "^0.2.3",
-    "chai": "^3.5.0",
-    "chai-as-promised": "^6.0.0",
-    "gh-pages": "^0.12.0",
-    "ink-docstrap": "^1.3.0",
-    "jsdoc": "^3.4.3",
-    "mocha": "^3.3.0",
-    "socks-proxy-agent": "^3.0.1",
-    "webpack": "^2.4.1"
-  },
-  "dependencies": {
-    "adm-zip": "^0.4.7",
-    "archiver": "^1.3.0",
-    "chalk": "^1.1.3",
-    "commander": "^2.9.0",
-    "object-assign": "^4.1.1",
-    "ora": "^1.2.0",
-    "promise-poller": "^1.5.2",
-    "superagent": "^3.5.2",
-    "superagent-proxy": "^1.0.2",
-    "theme-bump": "^1.2.3",
-    "yazl": "^2.4.2"
+    "browser-sync": "^2.18.12",
+    "concurrently": "^3.5.1",
+    "crex": "^1.5.0",
+    "cross-var": "^1.1.0",
+    "subpackage": "^1.1.0"
   }
 }

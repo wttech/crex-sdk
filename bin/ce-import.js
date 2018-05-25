@@ -55,7 +55,7 @@ program
 	.option('-i, --inspect', 'inspect package')
 	.option('-e, --env <name>', 'specify environment from auth.json')
 	.option('-a, --activate', 'activate after install')
-	.option('-b, --bump [version]', 'bump version in non-protected themes', 'patch')
+	.option('-b, --bump [version]', 'bump version in non-protected themes')
 	.parse(process.argv);
 
 if (program.args.length < 1 && !program.compress) {
@@ -67,6 +67,7 @@ if (Object.keys(auth).length > 0) {
 }
 
 var name = program.args[0];
+var ver = (program.bump === true) ? 'patch' : program.bump;
 var creds = program.env ? auth[program.env] : auth;
 var omit = program.omit ? program.omit : '**/node_modules/**';
 
@@ -74,6 +75,7 @@ if (typeof creds === 'undefined') {
 	console.log(chalk.red(util.format('No such environment as "%s" in Auth file', program.env)));
 	process.exit();
 }
+
 var crex = new CrEx(creds);
 var spinner = ora('Compressing package...').start();
 
@@ -110,13 +112,10 @@ new Promise((resolve, reject) => {
 		});
 
 		program.compress.forEach((folder) => {
-			const path = folder.replace(/^\/+/g, '');
+			versionsUpdated = ver ? Object.assign({}, versionsUpdated, bump(folder, ver)) : {};
 
-			if (program.bump) {
-				versionsUpdated = Object.assign({}, versionsUpdated, bump(path, program.bump));
-			}
-
-			zip.glob(path + '/**/*', {
+			zip.glob(folder + '/**/*' , {
+				cwd: (folder.charAt(0) === '/') ? folder : process.cwd(),
 				dot: true,
 				ignore: omit
 			});
@@ -158,8 +157,13 @@ new Promise((resolve, reject) => {
 	const errors = res.messages.filter((message) => message.type === 'ERROR').length;
 	console.log(chalk.yellow('⚠') + util.format(' %s warnings', warnings));
 	console.log(chalk.red('✖')  + util.format(' %s errors', errors));
-	res.messages.forEach((message) => {
+
+	res.messages.forEach((message, i) => {
 		var text = stripHtml(message.messageText);
+
+		if (i === 0) {
+			console.log();
+		}
 
 		switch (message.type) {
 			case 'WARNING':
@@ -180,7 +184,6 @@ new Promise((resolve, reject) => {
 		const versionInfo = (version && version.old !== version.new) ? util.format('(version %s ➔ %s)', version.old, version.new) : '';
 		console.log(util.format('    %s %s %s', theme.themePath + ':','   ' + color(theme.themeAction.toLowerCase()), chalk.blue(versionInfo)));
 	});
-
 
 	reportChanges(res, 'Css');
 	reportChanges(res, 'Js');
