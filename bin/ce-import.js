@@ -66,6 +66,7 @@ if (Object.keys(auth).length > 0) {
 	console.log(chalk.underline('Auth file found'));
 }
 
+var id = null;
 var name = program.args[0];
 var ver = (program.bump === true) ? 'patch' : program.bump;
 var creds = program.env ? auth[program.env] : auth;
@@ -133,6 +134,8 @@ new Promise((resolve, reject) => {
 		file: fs.createReadStream(name)
 	});
 }).then((res) => {
+	id = res.model.id;
+
 	if (!program.inspect) {
 		spinner.text = 'Installing package...';
 		return crex.importInstallPackage({
@@ -144,17 +147,27 @@ new Promise((resolve, reject) => {
 			id: res.model.id
 		});
 	}
-}).then((res) => {
+}).then((package) => {
+	spinner.text = 'Cleaning up...';
+
 	fs.unlink('ce-import.zip', function(err){
 		if (err) return;
 	});
 
+	return crex.importRemovePackage({
+		id: id
+	}).then(() => {
+		return package;
+	});
+}).then((res) => {
+	spinner.text = 'Presenting report...';
 	const action = program.inspect ? 'inspected' : 'installed';
 	const themesToActivate = [];
-	spinner.succeed(util.format('Package %s %s on %s', chalk.green(name), action, chalk.green(crex.getAddress())));
-	console.log();
 	const warnings = res.messages.filter((message) => message.type === 'WARNING').length;
 	const errors = res.messages.filter((message) => message.type === 'ERROR').length;
+
+	spinner.succeed(util.format('Package %s %s on %s', chalk.green(name), action, chalk.green(crex.getAddress())));
+	console.log();
 	console.log(chalk.yellow('⚠') + util.format(' %s warnings', warnings));
 	console.log(chalk.red('✖')  + util.format(' %s errors', errors));
 
@@ -189,6 +202,7 @@ new Promise((resolve, reject) => {
 	reportChanges(res, 'Js');
 	reportChanges(res, 'Other');
 	console.log();
+
 	if (themesToActivate.length > 0 && program.activate && !program.inspect) {
 		spinner = ora('Activating package...').start();
 		return crex.themesActivateThemes({themes: JSON.stringify(themesToActivate)});

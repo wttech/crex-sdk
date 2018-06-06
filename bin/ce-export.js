@@ -39,6 +39,7 @@ if (Object.keys(auth).length > 0) {
 	console.log(chalk.underline('Auth file found'));
 }
 
+var id = null;
 var paths = program.args[0].split(',');
 var filters = program.filter.map((filter) => (filter.charAt(0) === '/') ? filter : '/' + filter);
 var creds = program.env ? auth[program.env] : auth;
@@ -82,9 +83,10 @@ crex.exportCreatePackage({
 		},
 		retries: 10000
 	})
-}).then((id) => {
+}).then((packageId) => {
 	spinner.text = 'Downloading package...';
-	return crex.exportDownloadPackage({id: id});
+	id = packageId;
+	return crex.exportDownloadPackage({id: packageId});
 }).then((file) => {
 	spinner.text = 'Saving package...';
 	return new Promise((resolve, reject) => {
@@ -92,6 +94,14 @@ crex.exportCreatePackage({
 			if (err) reject(err);
 			resolve(name);
 		});
+	});
+}).then((package) => {
+	spinner.text = 'Cleaning up...';
+
+	return crex.exportRemovePackage({
+		id: id
+	}).then(() => {
+		return package;
 	});
 }).then((package) => {
 	if (program.extract) {
