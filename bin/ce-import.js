@@ -12,6 +12,8 @@ var poller = require('promise-poller');
 var auth = {};
 var versionsUpdated = {};
 
+const zipFileName = 'ce-import.zip';
+
 try {
 	auth = fs.readFileSync(process.cwd() + '/auth.json', 'utf-8');
 	auth = JSON.parse(auth);
@@ -70,7 +72,7 @@ var id = null;
 var name = program.args[0];
 var ver = (program.bump === true) ? 'patch' : program.bump;
 var creds = program.env ? auth[program.env] : auth;
-var omit = program.omit ? program.omit : '**/node_modules/**';
+var omit = program.omit ? program.omit : ['**/node_modules/**'];
 
 if (typeof creds === 'undefined') {
 	console.log(chalk.red(util.format('No such environment as "%s" in Auth file', program.env)));
@@ -98,7 +100,7 @@ var checkStatus = (id) => {
 
 new Promise((resolve, reject) => {
 	if (program.compress) {
-		name = 'ce-import.zip';
+		name = zipFileName;
 		var output = fs.createWriteStream(name);
 		var zip = archiver('zip');
 
@@ -115,10 +117,12 @@ new Promise((resolve, reject) => {
 		program.compress.forEach((folder) => {
 			versionsUpdated = ver ? Object.assign({}, versionsUpdated, bump(folder, ver)) : {};
 
+			const ignore = [...omit, `**/${zipFileName}`];
+
 			zip.glob(folder + '/**/*' , {
 				cwd: (folder.charAt(0) === '/') ? folder : process.cwd(),
 				dot: true,
-				ignore: omit
+				ignore
 			});
 		});
 
@@ -150,7 +154,7 @@ new Promise((resolve, reject) => {
 }).then((package) => {
 	spinner.text = 'Cleaning up...';
 
-	fs.unlink('ce-import.zip', function(err){
+	fs.unlink(zipFileName, function(err){
 		if (err) return;
 	});
 
