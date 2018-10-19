@@ -53,6 +53,7 @@ program
 	.usage('[path to zip or zip name]')
 	.option('-c, --compress <directories>', 'specify directories to be compressed', list)
 	.option('-o, --omit <globs>', 'specify globs to be omitted when creating zip', list)
+	.option('-n, --name <name>', 'specify path to zip or zip name')
 	.option('-p, --package', 'creates zip file, do not send the package to environment')
 	.option('-t, --target <url>', 'specify target instance')
 	.option('-i, --inspect', 'inspect package')
@@ -70,7 +71,7 @@ if (Object.keys(auth).length > 0) {
 }
 
 var id = null;
-var name = program.args[0];
+var name = program.name || program.args[0];
 var ver = (program.bump === true) ? 'patch' : program.bump;
 var creds = program.env ? auth[program.env] : auth;
 var omit = program.omit ? program.omit : ['**/node_modules/**'];
