@@ -50,7 +50,7 @@ const reportChanges = (data, type) => {
 };
 
 program
-	.usage('[path to zip or zip name]')
+	.usage('[path to zip]')
 	.option('-c, --compress <directories>', 'specify directories to be compressed', list)
 	.option('-o, --omit <globs>', 'specify globs to be omitted when creating zip', list)
 	.option('-f, --file <name>', 'specify file name for zip')
@@ -71,7 +71,7 @@ if (Object.keys(auth).length > 0) {
 }
 
 var id = null;
-var name = '';
+var name = program.args[0];
 var ver = (program.bump === true) ? 'patch' : program.bump;
 var creds = program.env ? auth[program.env] : auth;
 var omit = program.omit ? program.omit : ['**/node_modules/**'];
@@ -102,7 +102,7 @@ var checkStatus = (id) => {
 
 var pipelinePromise = new Promise((resolve, reject) => {
   if (program.compress) {
-    name = program.file || program.args[0] || zipFileName;
+    name = program.file || zipFileName;
     var output = fs.createWriteStream(name);
     var zip = archiver('zip');
 
@@ -144,7 +144,6 @@ if (program.package) {
 } else {
   pipelinePromise
     .then(() => {
-      console.log('SHOULD NOT BE HERE');
       spinner.text = util.format('Uploading package to %s...', chalk.green(crex.getAddress()));
       return crex.importUploadPackage({
         file: fs.createReadStream(name)
