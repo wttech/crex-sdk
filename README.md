@@ -48,7 +48,9 @@ $ ce --help
 #### CLI Documentation
 
 Full documentation can be found here:
-<https://github.com/Cognifide/crex-sdk/wiki/CLI-Usage>
+
+1. For v1: [CrEx CLI Documentation v1](docs/crex-sdk-cli-v1.md)
+2. For v2: [CrEx CLI Documentation v2](docs/crex-sdk-cli-v2.md)
 
 ## License 
 MIT
