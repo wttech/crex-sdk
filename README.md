@@ -25,7 +25,7 @@ Use with Node or module bundler like Webpack
 var CrEx = require('crex');
 
 var crex = new CrEx();
-crex.exportGetAllPackages()
+crex.getPackageList()
   .then((packages) => console.log(packages))
   .catch((err) => console.log(err));
 ```

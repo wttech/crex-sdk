@@ -33,7 +33,7 @@ Browser with ``script``
 <script src="https://unpkg.com/crex/dist/crex-sdk.min.js"></script>
 <script>
 var crex = new CrEx(); //Defaults to local instance
-crex.exportGetAllPackages()
+crex.getPackageList()
   .then((packages) => console.log(packages))
   .catch((err) => console.log(err));
 </script>
@@ -44,7 +44,7 @@ Nodejs, Webpack, Rollup
 ```js
 const CrEx = require('crex');
 const crex = new CrEx(); //Defaults to local instance
-crex.exportGetAllPackages()
+crex.getPackageList()
   .then((packages) => console.log(packages))
   .catch((err) => console.log(err));
 ```
@@ -52,7 +52,7 @@ crex.exportGetAllPackages()
 ## General documentation
 
 #### Endpoints
-For documentation of all endpoints, parameters they receive and data they return see [CrEx class definition](https://mateuszluczak.github.io/crex-sdk/CrEx.html). Methods are available directly from an instance of API class eg. ``crex.exportGetAllPackages()``
+For documentation of all endpoints, parameters they receive and data they return see [CrEx class definition](https://mateuszluczak.github.io/crex-sdk/CrEx.html). Methods are available directly from an instance of API class eg. ``crex.getPackageList()``
 
 #### Promises
 The SDK uses native Promise implementation. For using non-supporting browser polyfill is required.
