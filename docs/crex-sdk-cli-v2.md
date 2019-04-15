@@ -18,7 +18,7 @@ Option `-t` can be used to pass environment string
 $ ce export content/default/en-gb/brand -t admin:admin@localhost:4502
 ```
 ### AuthFile
-When file named `auth.json` is created in the working directory of the CLI it will be used for the environment configuration in all the export and import commands:
+When file named `auth.json` is created in the working directory of the CLI it will be used for the environment configuration in all the download and upload commands:
 
 **Example**
 
@@ -29,9 +29,15 @@ When file named `auth.json` is created in the working directory of the CLI it wi
   "password": "admin",
   "url": "localhost",
   "port": 4502 // optional
-  "proxy: "http://18.0.01" // optional
+  "proxy: { // optional
+    "*":"http://18.0.01"
+  }
 }
 ```
+
+How to configure proxy:
+https://visionmedia.github.io/superagent/#forcing-specific-connection-ip-address
+
 
 ```
 $ ce export content/default/en-gb/brand
