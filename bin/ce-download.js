@@ -15,7 +15,7 @@ program
 	.option('-e, --env <name>', 'specify environment from auth.json')
 	.parse(process.argv);
 
-if (program.args.length < 1) {
+if (program.args.length < 1 && !program.name) {
 	return program.help();
 }
 
