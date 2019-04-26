@@ -10,12 +10,12 @@ npm install crex -g
 ## General
 ### Default environment
 When no additional configuration provided/any paramters passed CLI will use `localhost:4502` with credentials `admin`/`admin` as default environment.
-### Import/Export from target environment
+### Download/Upload/Create from target environment
 Option `-t` can be used to pass environment string
 
 **Example:**
 ```
-$ ce export content/default/en-gb/brand -t admin:admin@localhost:4502
+$ ce download Brand -t admin:admin@localhost:4502
 ```
 ### AuthFile
 When file named `auth.json` is created in the working directory of the CLI it will be used for the environment configuration in all the download and upload commands:
@@ -38,10 +38,6 @@ When file named `auth.json` is created in the working directory of the CLI it wi
 How to configure proxy:
 https://visionmedia.github.io/superagent/#forcing-specific-connection-ip-address
 
-
-```
-$ ce export content/default/en-gb/brand
-```
 ### AuthFile with multiple environments
 File `auth.json` can contain more environment configurations in format visible below. However option `-e` **must** be provided to specify which configuration should be used
 
@@ -67,30 +63,50 @@ File `auth.json` can contain more environment configurations in format visible b
 ```
 $ ce download content/default/en-gb/brand -e prod
 ```
+## Create
+### Basic usage
+Basic create command takes `content path` and create package on with 
+```
+$ ce create <path_to_content>
+```
+**Example**
+```
+$ ce create content/default/en-gb/brand
+```
+### Name - `-n`
+By providing option `-n` specific directories can be compressed and uploaded as a package.
+```
+$ ce create <path_to_content> -n <name>
+```
+**Example**
+```
+$ ce create content/default/en-gb/brand -n Brand
+```
+
 ## Download
 ### Basic usage
 Basic `download` command download content from the instance and downloads the `.zip` file containing the package
 ```
-$ ce download <path_to_content>
+$ ce download <name_of_package>
 ```
 
 ### Extracting - `-x`
 When option `-x` is provided package will be extracted. By default package is extracted to the current working directory, however this can be changed by passing `path` as a parameter. After extraction `.zip` is deleted.
 ```
-$ ce download <path_to_content> -x [path]
+$ ce download <name_of_package> -x [path]
 ```
 **Example**
 ```
-$ ce download content/default/en-gb/brand -x /packages
+$ ce download Brand -x /packages
 ```
 ### Filtering specific directories - `-f`
 When package is extracted by default of the encountered paths are overwritten. There is no way of changing that behaviour, however by providing option `-f` we could limit folders that will be extracted from the package. Filters can be comma separated list of directories.
 ```
-$ ce download <path_to_content> -x [path] -f <paths>
+$ ce download <name_of_package> -x [path] -f <paths>
 ```
 **Example**
 ```
-$ ce download content/default/en-gb/brand -x /packages -f etc
+$ ce download Brand -x /packages -f etc
 ```
 
 ## Upload
@@ -120,12 +136,3 @@ When option `-o` is used with `-c` you can specify list of [globs](https://githu
 $ ce upload -c etc/designs/zg/basic -o **/.sass-cache/**,**/node_modules/**
 ```
 
-### Installing - `-i`
-When option `-i` is used and there are changes in installed package will be installed on publish instance.
-```
-$ ce upload [path_to_zip] -i
-```
-**Example**
-```
-$ ce upload -c etc -i
-```

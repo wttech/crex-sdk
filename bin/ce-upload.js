@@ -12,10 +12,9 @@ program
 	.option('-c, --compress <directories>', 'specify directories to be compressed', list)
 	.option('-o, --omit <globs>', 'specify globs to be omitted when creating zip', list)
 	.option('-e, --env <name>', 'specify environment from auth.json')
-	.option('-i, --install', 'install after upload')
 	.parse(process.argv);
 
-if (program.args.length < 1 && !program.compress) {
+if (program.args.length < 1) {
 	return program.help();
 }
 

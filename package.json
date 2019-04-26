@@ -23,7 +23,8 @@
   "bin": {
     "ce": "bin/ce.js",
     "ce-upload": "bin/ce-upload.js",
-    "ce-download": "bin/ce-download.js"
+    "ce-download": "bin/ce-download.js",
+    "ce-create": "bin/ce-create.js"
   },
   "scripts": {
     "build": "npm run build:module",
