@@ -90,6 +90,16 @@ Basic `download` command download content from the instance and downloads the `.
 $ ce download <name_of_package>
 ```
 
+### Download from path - `-p`
+When option `-p` is provided you can download package from specific path.
+```
+$ ce download -p <path_to_content>
+```
+**Example**
+```
+$ ce download -p /content/default/en-gb/brand
+```
+
 ### Extracting - `-x`
 When option `-x` is provided package will be extracted. By default package is extracted to the current working directory, however this can be changed by passing `path` as a parameter. After extraction `.zip` is deleted.
 ```
