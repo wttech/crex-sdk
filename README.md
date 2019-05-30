@@ -1,6 +1,6 @@
 ![Cognifide logo](http://cognifide.github.io/images/cognifide-logo.png)
 
-# Zen Garden Creative Exchange SDK for Javascript
+# Zen Garden Creative Exchange SDK for JavaScript
 <a href="https://www.npmjs.com/package/crex"><img src="https://img.shields.io/npm/v/crex.svg" alt="Version"></a>
 <a href="https://www.npmjs.com/package/crex"><img src="https://img.shields.io/npm/l/crex.svg" alt="License"></a>
 
