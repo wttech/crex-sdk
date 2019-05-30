@@ -51,9 +51,11 @@ const reportChanges = (data, type) => {
 
 program
 	.usage('[path to zip]')
-	.option('-t, --target <url>', 'specify target instance')
 	.option('-c, --compress <directories>', 'specify directories to be compressed', list)
 	.option('-o, --omit <globs>', 'specify globs to be omitted when creating zip', list)
+	.option('-f, --file <name>', 'specify file name for zip')
+	.option('-p, --package', 'creates zip file, do not send the package to environment')
+	.option('-t, --target <url>', 'specify target instance')
 	.option('-i, --inspect', 'inspect package')
 	.option('-e, --env <name>', 'specify environment from auth.json')
 	.option('-a, --activate', 'activate after install')
@@ -98,136 +100,146 @@ var checkStatus = (id) => {
 	});
 };
 
-new Promise((resolve, reject) => {
-	if (program.compress) {
-		name = zipFileName;
-		var output = fs.createWriteStream(name);
-		var zip = archiver('zip');
+var pipelinePromise = new Promise((resolve, reject) => {
+  if (program.compress) {
+    name = program.file || zipFileName;
+    var output = fs.createWriteStream(name);
+    var zip = archiver('zip');
 
-		zip.pipe(output);
+    zip.pipe(output);
 
-		output.on('close', function() {
-			resolve();
-		});
+    output.on('close', function () {
+      resolve();
+    });
 
-		zip.on('error', function(err) {
-			reject(err);
-		});
+    zip.on('error', function (err) {
+      reject(err);
+    });
 
-		program.compress.forEach((folder) => {
-			versionsUpdated = ver ? Object.assign({}, versionsUpdated, bump(folder, ver)) : {};
+    program.compress.forEach((folder) => {
+      versionsUpdated = ver ? Object.assign({}, versionsUpdated, bump(folder, ver)) : {};
 
-			const ignore = [...omit, `**/${zipFileName}`];
+      const ignore = [...omit, `**/${zipFileName}`];
 
-			zip.glob(folder + '/**/*' , {
-				cwd: (folder.charAt(0) === '/') ? folder : process.cwd(),
-				dot: true,
-				ignore
-			});
-		});
+      zip.glob(folder + '/**/*', {
+        cwd: (folder.charAt(0) === '/') ? folder : process.cwd(),
+        dot: true,
+        ignore
+      });
+    });
 
-		spinner.text = 'Compressing package...';
+    spinner.text = 'Compressing package...';
 
-		zip.finalize();
-	} else {
-		resolve();
-	}
-}).then(() => {
-	spinner.text = util.format('Uploading package to %s...', chalk.green(crex.getAddress()));
-	return crex.importUploadPackage({
-		file: fs.createReadStream(name)
-	});
-}).then((res) => {
-	id = res.model.id;
-
-	if (!program.inspect) {
-		spinner.text = 'Installing package...';
-		return crex.importInstallPackage({
-			id: res.model.id
-		});
-	} else {
-		spinner.text = 'Inspecting package...';
-		return crex.importInspectPackage({
-			id: res.model.id
-		});
-	}
-}).then((package) => {
-	spinner.text = 'Cleaning up...';
-
-	fs.unlink(zipFileName, function(err){
-		if (err) return;
-	});
-
-	return crex.importRemovePackage({
-		id: id
-	}).then(() => {
-		return package;
-	});
-}).then((res) => {
-	spinner.text = 'Presenting report...';
-	const action = program.inspect ? 'inspected' : 'installed';
-	const themesToActivate = [];
-	const warnings = res.messages.filter((message) => message.type === 'WARNING').length;
-	const errors = res.messages.filter((message) => message.type === 'ERROR').length;
-
-	spinner.succeed(util.format('Package %s %s on %s', chalk.green(name), action, chalk.green(crex.getAddress())));
-	console.log();
-	console.log(chalk.yellow('⚠') + util.format(' %s warnings', warnings));
-	console.log(chalk.red('✖')  + util.format(' %s errors', errors));
-
-	res.messages.forEach((message, i) => {
-		var text = stripHtml(message.messageText);
-
-		if (i === 0) {
-			console.log();
-		}
-
-		switch (message.type) {
-			case 'WARNING':
-				console.log(chalk.yellow('Warning: ' + text));
-				break;
-			case 'ERROR':
-				console.log(chalk.red('Error: ' + text));
-				break;
-		}
-	});
-	console.log(chalk.underline("\nThemes affected:\n"));
-	res.themeStatuses.forEach((theme) => {
-		if (theme.themeAction !== 'IGNORED' && theme.themeAction !== 'UNTOUCHED') {
-			themesToActivate.push(theme.themePath);
-		}
-		const color = (theme.themeAction.toLowerCase() === 'changed') ? chalk.green : chalk.grey;
-		const version = versionsUpdated[theme.themePath.substring(1)];
-		const versionInfo = (version && version.old !== version.new) ? util.format('(version %s ➔ %s)', version.old, version.new) : '';
-		console.log(util.format('    %s %s %s', theme.themePath + ':','   ' + color(theme.themeAction.toLowerCase()), chalk.blue(versionInfo)));
-	});
-
-	reportChanges(res, 'Css');
-	reportChanges(res, 'Js');
-	reportChanges(res, 'Other');
-	console.log();
-
-	if (themesToActivate.length > 0 && program.activate && !program.inspect) {
-		spinner = ora('Activating package...').start();
-		return crex.themesActivateThemes({themes: JSON.stringify(themesToActivate)});
-	} else {
-		return false;
-	}
-}).then((package) => {
-	if (!package) {
-		return false;
-	}
-	return poller.default({
-		taskFn: function () {
-			return checkStatus(package.id)
-		},
-		retries: 10000
-	})
-}).then((res) => {
-	if (!res) {
-		return false;
-	}
-	spinner.succeed(util.format('Package %s activated', chalk.green(name)));
-}).catch((err) => {
-	spinner.fail(chalk.red(err));
+    zip.finalize();
+  } else {
+    resolve();
+  }
 });
+
+if (program.package) {
+  pipelinePromise
+    .then(() => {
+      spinner.succeed(util.format('Package %s saved', chalk.green(name)));
+    });
+} else {
+  pipelinePromise
+    .then(() => {
+      spinner.text = util.format('Uploading package to %s...', chalk.green(crex.getAddress()));
+      return crex.importUploadPackage({
+        file: fs.createReadStream(name)
+      });
+    }).then((res) => {
+      id = res.model.id;
+
+      if (!program.inspect) {
+        spinner.text = 'Installing package...';
+        return crex.importInstallPackage({
+          id: res.model.id
+        });
+      } else {
+        spinner.text = 'Inspecting package...';
+        return crex.importInspectPackage({
+          id: res.model.id
+        });
+      }
+    }).then((package) => {
+      spinner.text = 'Cleaning up...';
+
+      fs.unlink(zipFileName, function (err) {
+        if (err) return;
+      });
+
+      return crex.importRemovePackage({
+        id: id
+      }).then(() => {
+        return package;
+      });
+    }).then((res) => {
+      spinner.text = 'Presenting report...';
+      const action = program.inspect ? 'inspected' : 'installed';
+      const themesToActivate = [];
+      const warnings = res.messages.filter((message) => message.type === 'WARNING').length;
+      const errors = res.messages.filter((message) => message.type === 'ERROR').length;
+
+      spinner.succeed(util.format('Package %s %s on %s', chalk.green(name), action, chalk.green(crex.getAddress())));
+      console.log();
+      console.log(chalk.yellow('⚠') + util.format(' %s warnings', warnings));
+      console.log(chalk.red('✖') + util.format(' %s errors', errors));
+
+      res.messages.forEach((message, i) => {
+        var text = stripHtml(message.messageText);
+
+        if (i === 0) {
+          console.log();
+        }
+
+        switch (message.type) {
+          case 'WARNING':
+            console.log(chalk.yellow('Warning: ' + text));
+            break;
+          case 'ERROR':
+            console.log(chalk.red('Error: ' + text));
+            break;
+        }
+      });
+      console.log(chalk.underline("\nThemes affected:\n"));
+      res.themeStatuses.forEach((theme) => {
+        if (theme.themeAction !== 'IGNORED' && theme.themeAction !== 'UNTOUCHED') {
+          themesToActivate.push(theme.themePath);
+        }
+        const color = (theme.themeAction.toLowerCase() === 'changed') ? chalk.green : chalk.grey;
+        const version = versionsUpdated[theme.themePath.substring(1)];
+        const versionInfo = (version && version.old !== version.new) ? util.format('(version %s ➔ %s)', version.old, version.new) : '';
+        console.log(util.format('    %s %s %s', theme.themePath + ':', '   ' + color(theme.themeAction.toLowerCase()), chalk.blue(versionInfo)));
+      });
+
+      reportChanges(res, 'Css');
+      reportChanges(res, 'Js');
+      reportChanges(res, 'Other');
+      console.log();
+
+      if (themesToActivate.length > 0 && program.activate && !program.inspect) {
+        spinner = ora('Activating package...').start();
+        return crex.themesActivateThemes({ themes: JSON.stringify(themesToActivate) });
+      } else {
+        return false;
+      }
+    }).then((package) => {
+      if (!package) {
+        return false;
+      }
+      return poller.default({
+        taskFn: function () {
+          return checkStatus(package.id)
+        },
+        retries: 10000
+      })
+    }).then((res) => {
+      if (!res) {
+        return false;
+      }
+      spinner.succeed(util.format('Package %s activated', chalk.green(name)));
+    }).catch((err) => {
+      spinner.fail(chalk.red(err));
+    });
+}
