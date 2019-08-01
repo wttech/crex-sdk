@@ -1,6 +1,6 @@
 {
   "name": "crex",
-  "version": "1.8.0",
+  "version": "2.0.0",
   "description": "Creative Exchange SDK for Javascript",
   "author": "Mateusz Luczak <mateusz.luczak@outlook.com>",
   "license": "MIT",
@@ -10,7 +10,7 @@
     "url": "https://github.com/Cognifide/crex-sdk"
   },
   "engines": {
-    "node": ">=6.10.0"
+    "node": ">=8.11.1"
   },
   "homepage": "http://www.cognifide.com/our-technology/zengarden",
   "keywords": [
@@ -22,8 +22,9 @@
   "bugs": "https://github.com/Cognifide/crex-sdk/issues",
   "bin": {
     "ce": "bin/ce.js",
-    "ce-import": "bin/ce-import.js",
-    "ce-export": "bin/ce-export.js"
+    "ce-upload": "bin/ce-upload.js",
+    "ce-download": "bin/ce-download.js",
+    "ce-create": "bin/ce-create.js"
   },
   "scripts": {
     "build": "npm run build:module",
@@ -38,28 +39,22 @@
     "dist",
     "README.md"
   ],
-  "devDependencies": {
-    "banner-webpack-plugin": "^0.2.3",
-    "chai": "^3.5.0",
-    "chai-as-promised": "^6.0.0",
-    "gh-pages": "^0.12.0",
-    "ink-docstrap": "^1.3.0",
-    "jsdoc": "^3.4.3",
-    "mocha": "^3.3.0",
-    "socks-proxy-agent": "^3.0.1",
-    "webpack": "^2.4.1"
-  },
   "dependencies": {
-    "adm-zip": "0.4.7",
-    "archiver": "^1.3.0",
-    "chalk": "^1.1.3",
-    "commander": "^2.9.0",
-    "object-assign": "^4.1.1",
-    "ora": "^1.2.0",
-    "promise-poller": "^1.5.2",
-    "superagent": "^3.5.2",
-    "superagent-proxy": "^1.0.2",
-    "theme-bump": "^1.3.0",
-    "yazl": "^2.4.2"
+    "adm-zip": "^0.4.13",
+    "archiver": "^3.0.0",
+    "chalk": "^2.4.2",
+    "commander": "^2.20.0",
+    "ora": "^3.4.0",
+    "superagent": "^5.0.2"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "gh-pages": "^2.0.1",
+    "ink-docstrap": "^1.3.2",
+    "jsdoc": "^3.5.5",
+    "mocha": "^6.1.3",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.0"
   }
 }
