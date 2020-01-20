@@ -16,6 +16,7 @@
   "author": "Kacper Rogowski",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.19.1",
     "commander": "^2.20.3",
     "ora": "^4.0.3",
     "superagent": "^5.2.1"

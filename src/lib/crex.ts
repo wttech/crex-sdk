@@ -1,5 +1,5 @@
 import { CrExArgPackage, CrExArgAllPackage, CrExArgNewPackage, CrExArgBuildPackage, CrExResponse, CrExArgUploadPackage, CrExOptions } from '../index';
-import { doGet, doPost, doDelete, doDownload, doUpload } from './request';
+import { doGet } from './request';
 const rootPath = '/apps/creative-exchange/web-api';
 
 export default class CrEx {
@@ -48,14 +48,14 @@ export default class CrEx {
 		const fullPath = this.address + path;
 
 		switch (method) {
-			case 'POST':
-				return doPost(fullPath, args, this);
-			case 'DELETE':
-				return doDelete(fullPath, args, this);
-			case 'UPLOAD':
-				return doUpload(fullPath, args, this);
-			case 'DOWNLOAD':
-				return doDownload(fullPath, args, this);
+			// case 'POST':
+			// 	return doPost(fullPath, args, this);
+			// case 'DELETE':
+			// 	return doDelete(fullPath, args, this);
+			// case 'UPLOAD':
+			// 	return doUpload(fullPath, args, this);
+			// case 'DOWNLOAD':
+			// 	return doDownload(fullPath, args, this);
 			default:
 				return doGet(fullPath, args, this);
 		}
