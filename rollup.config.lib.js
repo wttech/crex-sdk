@@ -1,4 +1,5 @@
-import typescript from 'rollup-plugin-typescript';
+import typescript from '@rollup/plugin-typescript';
+import resolve from '@rollup/plugin-node-resolve';
 import { uglify } from "rollup-plugin-uglify";
 
 export default {
@@ -8,7 +9,9 @@ export default {
 		format: 'cjs'
 	},
 	plugins: [
-		typescript({lib: ["es5", "es6"], target: "es5"}),
-		uglify()
+		typescript(),
+		resolve({
+			mainFields: ['browser'],
+		}),
 	]
 }

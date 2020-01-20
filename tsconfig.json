@@ -2,13 +2,19 @@
 	"compilerOptions": {
 		"target": "es5",
 		"module": "commonjs",
-		"lib": ["es6", "es2015"],
+		"lib": ["es6", "dom"],
 		"outDir": "dist",
 		"rootDir": "src",
 		"declaration": true,
 		"strict": true,
-		"types": ["node"],
 		"esModuleInterop": true,
+		"types" : [
+			"chai",
+			"chai-as-promised",
+			"mocha",
+			"node",
+			"ora"
+		]
 	},
 	"exclude": [
 		"node_modules",

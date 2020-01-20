@@ -1,4 +1,4 @@
-// @ts-ignore
+
 import * as request from 'superagent';
 import { CrExResponse, CrExRequestOptions, CrExRequestArgs } from '../index';
 
