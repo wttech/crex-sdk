@@ -1,24 +1,16 @@
-const request = require('superagent');
+// @ts-ignore
+import * as request from 'superagent';
+import { CrExResponse, CrExRequestOptions, CrExRequestArgs } from '../index';
 
-const nodeBinaryParser = (res, done) => {
-	res.setEncoding('binary');
-	res.text = '';
-	res.on('data', (chunk) => {
-		res.text += chunk;
-	});
-	res.on('end', () => {
-		done(null, new Buffer(res.text, 'binary'));
-	});
-};
-
-const doGet = (url, args, config) => {
+export const doGet = (url: string, args: CrExRequestArgs, config: CrExRequestOptions): CrExResponse => {
 	return new Promise((resolve, reject) => {
-		request.get(url)
+		request
+			.get(url)
 			.connect(config.proxy)
 			.auth(config.user, config.password)
 			.query(args)
 			.buffer(true)
-			.end((err, res) => {
+			.end((err: any, res: any) => {
 				if (err || !res || !Object.keys(res.body).length) {
 					reject(err);
 				} else {
@@ -31,14 +23,15 @@ const doGet = (url, args, config) => {
 	});
 };
 
-const doPost = (url, args, config) => {
+export const doPost = (url: string, args: CrExRequestArgs, config: CrExRequestOptions): CrExResponse => {
 	return new Promise((resolve, reject) => {
-		request.post(url)
+		request
+			.post(url)
 			.connect(config.proxy)
 			.auth(config.user, config.password)
 			.type('form')
 			.query(args)
-			.end((err, res) => {
+			.end((err: any, res: any) => {
 				if (err || !res) {
 					reject(err);
 				} else {
@@ -51,13 +44,14 @@ const doPost = (url, args, config) => {
 	});
 };
 
-const doDelete = (url, args, config) => {
+export const doDelete = (url: string, args: CrExRequestArgs, config: CrExRequestOptions): CrExResponse => {
 	return new Promise((resolve, reject) => {
-		request.delete(url)
+		request
+			.delete(url)
 			.connect(config.proxy)
 			.auth(config.user, config.password)
 			.query(args)
-			.end((err, res) => {
+			.end((err: any, res: any) => {
 				if (err || !res) {
 					reject(err);
 				} else {
@@ -70,13 +64,14 @@ const doDelete = (url, args, config) => {
 	});
 };
 
-const doUpload = (url, args, config) => {
+export const doUpload = (url: string, args: CrExRequestArgs, config: CrExRequestOptions): CrExResponse => {
 	return new Promise((resolve, reject) => {
-		request.post(url)
+		request
+			.post(url)
 			.connect(config.proxy)
 			.auth(config.user, config.password)
 			.attach('file', args['file'])
-			.end((err, res) => {
+			.end((err: any, res: any) => {
 				if (err || !res) {
 					reject(err);
 				} else {
@@ -89,15 +84,16 @@ const doUpload = (url, args, config) => {
 	});
 }
 
-const doDownload = (url, args, config) => {
+export const doDownload = (url: string, args: CrExRequestArgs, config: CrExRequestOptions): CrExResponse => {
 	return new Promise((resolve, reject) => {
-		request.get(url)
+		request
+			.get(url)
 			.connect(config.proxy)
 			.auth(config.user, config.password)
 			.query(args)
 			.buffer(true)
 			.parse(nodeBinaryParser)
-			.end((err, res) => {
+			.end((err: any, res: any) => {
 				if (err || !res) {
 					reject(err);
 				} else {
@@ -110,10 +106,13 @@ const doDownload = (url, args, config) => {
 	});
 }
 
-module.exports = {
-	doGet: doGet,
-	doPost: doPost,
-	doDelete: doDelete,
-	doUpload: doUpload,
-	doDownload: doDownload
+const nodeBinaryParser = (res: any, done: any) => {
+	res.setEncoding('binary');
+	res.text = '';
+	res.on('data', (chunk: string) => {
+		res.text += chunk;
+	});
+	res.on('end', () => {
+		done(null, new Buffer(res.text, 'binary'));
+	});
 };
