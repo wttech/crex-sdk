@@ -1,4 +1,3 @@
-
 export type CrExOptions = {
 	user?: string,
 	password?: string,
@@ -38,8 +37,7 @@ export type CrExArgBuildPackage = {
 };
 
 export type CrExArgUploadPackage = {
-	filePath: any,
-	file?: Blob
+	file: ReadableStream<any>
 };
 
 export type CrExResponse = Promise<CrExPackage>;
@@ -55,6 +53,5 @@ interface CrExRequestArgs {
 	rootPath?: string;
 	name?: string;
 	synchronous?: boolean;
-	filePath?: string 
-	file?: Blob
+	file?: ReadableStream<any>
 }

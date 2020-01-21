@@ -1,8 +1,6 @@
 
 import { AxiosInstance } from 'axios';
 import { CrExResponse, CrExRequestOptions, CrExRequestArgs, CrExPackage } from '../index';
-import FormData from 'form-data';
-import fs from 'fs';
 
 export const doGet = (url: string, params: CrExRequestArgs, instance: AxiosInstance): CrExResponse => (
 	new Promise((resolve, reject) => {
@@ -40,34 +38,26 @@ export const doDelete = (url: string, params: CrExRequestArgs, instance: AxiosIn
 	})
 );
 
-// TODO
-// This shoudl work on browser and in console as well
 export const doUpload = (url: string, data: CrExRequestArgs, instance: AxiosInstance): CrExResponse => (
 	new Promise((resolve, reject) => {
-		const formData = new FormData();
-		let headers = {};
-		let knownLength = 0;
+		let file;
 
-		if (data.filePath) {
-			const formData = new FormData();
-			formData.append("firstFile", fs.createReadStream(data.filePath))
-			knownLength = fs.statSync(data.filePath).size
+		if(typeof process === 'object') {
+			const FD = require('form-data');
+			file = new FD();
+		} else {
+			file = new FormData();
 		}
 
-		headers = {
-			...formData.getHeaders(),
-			"Content-Length": knownLength
-		};
-
-		console.log(headers);
+		file.append('file', data.file)
 
 		instance
 			.post(url,
-				formData,
-				{ headers }
+				file,
+				{ headers: file.getHeaders() }
 			)
 			.then((res) => resolve(res.data))
-			.catch((err) => resolve(err.message))
+			.catch((err) => reject(err.message))
 	})
 );
 

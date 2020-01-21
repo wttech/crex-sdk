@@ -5,7 +5,7 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 import CrEx from '../src/lib/crex';
 
-xdescribe('CrEx', () => {
+describe('CrEx', () => {
 	const crex = new CrEx({
 		user: 'admin',
 		password: 'admin',
@@ -26,7 +26,7 @@ xdescribe('CrEx', () => {
 		});
 	});
 
-	xdescribe('#downloadPackage', () => {
+	describe('#downloadPackage', () => {
 		it('should download package', () => {
 			return expect(crex.downloadPackage({
 				'packageId': 'fbf74a5d-1301-426d-a5aa-4d5899ff86fd'

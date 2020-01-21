@@ -26,12 +26,12 @@ describe('CrEx', () => {
 	describe('#uploadPackage', () => {
 		it('should upload package', () => {
 			return expect(crex.uploadPackage({
-				'filePath': path.resolve(__dirname, 'test-package.zip')
+				'file': fs.createReadStream(path.resolve(__dirname, 'test-package.zip'))
 			})).to.eventually.be.a('object');
 		});
 	});
 	
-	xdescribe('#installPackage', () => {
+	describe('#installPackage', () => {
 		it('should install package', () => {
 			return expect(crex.installPackage({
 				'packageId': '4731bd1f-876b-4879-b27a-fb58d6d2248f'
