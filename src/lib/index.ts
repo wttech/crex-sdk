@@ -1,3 +1,3 @@
-import CrEx from './crex';
+import CrEx from "./crex";
 
 export default CrEx;

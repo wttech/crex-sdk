@@ -1,6 +1,8 @@
 import typescript from '@rollup/plugin-typescript';
 import resolve from '@rollup/plugin-node-resolve';
-import { uglify } from "rollup-plugin-uglify";
+import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
+import tslint from "rollup-plugin-tslint";
 
 export default {
 	input: './src/lib/index.ts',
@@ -9,9 +11,14 @@ export default {
 		format: 'cjs'
 	},
 	plugins: [
+		tslint(),
 		typescript(),
 		resolve({
-			mainFields: ['browser'],
+			preferBuiltins: true
 		}),
+		commonjs({
+			include: /node_modules/
+		}),
+		json(),
 	]
 }
