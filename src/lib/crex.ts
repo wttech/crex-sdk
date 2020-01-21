@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import { CrExArgPackage, CrExArgAllPackage, CrExArgNewPackage, CrExArgBuildPackage, CrExResponse, CrExArgUploadPackage, CrExOptions } from '../index';
-import { doGet, doPost, doUpload, doDelete, doDownload, doInstall } from './request';
-const rootPath = '/apps/creative-exchange/web-api';
+import { doGet, doPost, doUpload, doDelete, doDownload } from './request';
+const rootPath = '/apps/creative-exchange/api';
 
 export default class CrEx {
 	public user: string = 'admin';
@@ -26,8 +26,6 @@ export default class CrEx {
 		this.port = address.length > 1 ? address[1] : '';
 	};
 
-
-
 	// API
 	public getPackageStatus = (args: CrExArgPackage): CrExResponse => this.request('GET', `${rootPath}/status.json`, args);
 
@@ -43,7 +41,7 @@ export default class CrEx {
 
 	public uploadPackage = (args: CrExArgUploadPackage): CrExResponse => this.request('UPLOAD', `${rootPath}/upload.json`, args)
 
-	public installPackage = (args: CrExArgPackage): CrExResponse => this.request('INSTALL', `${rootPath}/install.json`, args)
+	public installPackage = (args: CrExArgPackage): CrExResponse => this.request('POST', `${rootPath}/install.json`, args)
 
 	private request(method: string, path: string, args: any): CrExResponse {
 		switch (method) {
@@ -51,8 +49,6 @@ export default class CrEx {
 				return doPost(path, args, this.instance);
 			case 'DELETE':
 				return doDelete(path, args, this.instance);
-			case 'INSTALL':
-				return doInstall(path, args, this.instance);
 			case 'UPLOAD':
 				return doUpload(path, args, this.instance);
 			case 'DOWNLOAD':

@@ -39,9 +39,9 @@ describe('CrEx', () => {
 		});
 	});
 	
-	xdescribe('#createPackage and #deletePackage', () => {
+	describe('#createPackage and #deletePackage', () => {
 		it('should create package and delete it', () => {
-			var request = new Promise((resolve, reject) => {
+			const request = new Promise((resolve, reject) => {
 				crex.createPackage({
 					'rootPath': '/content/we-retail/us/en/user/cart'
 				})
@@ -66,7 +66,7 @@ describe('CrEx', () => {
 				});
 			})
 			
-			return expect(request).to.eventually.be.a('object')
+			return expect(request).to.eventually.be.a('string')
 		});
 	});
 });

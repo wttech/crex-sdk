@@ -1,13 +1,13 @@
 
 import { AxiosInstance } from 'axios';
-import { CrExResponse, CrExRequestOptions, CrExRequestArgs, CrExPackage } from '../index';
+import { CrExResponse, CrExRequestArgs } from '../index';
 
 export const doGet = (url: string, params: CrExRequestArgs, instance: AxiosInstance): CrExResponse => (
 	new Promise((resolve, reject) => {
 		instance
 			.get(url, { params })
 			.then((res) => resolve(res.data))
-			.catch((err) => reject(err.message))
+			.catch((err) => reject(err.response.data.message))
 	})
 );
 
@@ -16,16 +16,7 @@ export const doPost = (url: string, params: CrExRequestArgs, instance: AxiosInst
 		instance
 			.post(url, undefined, { params })
 			.then((res) => resolve(res.data))
-			.catch((err) => reject(err))
-	})
-);
-
-export const doInstall = (url: string, params: CrExRequestArgs, instance: AxiosInstance): CrExResponse => (
-	new Promise((resolve, reject) => {
-		instance
-			.post(url, undefined, { params })
-			.then((res) => resolve(res.data))
-			.catch((err) => console.log(err))
+			.catch((err) => reject(err.response.data.message))
 	})
 );
 
@@ -34,7 +25,7 @@ export const doDelete = (url: string, params: CrExRequestArgs, instance: AxiosIn
 		instance
 			.delete(url, { params })
 			.then((res) => resolve(res.data))
-			.catch((err) => reject(err.message))
+			.catch((err) => reject(err.response.data.message))
 	})
 );
 
@@ -57,24 +48,18 @@ export const doUpload = (url: string, data: CrExRequestArgs, instance: AxiosInst
 				{ headers: file.getHeaders() }
 			)
 			.then((res) => resolve(res.data))
-			.catch((err) => reject(err.message))
+			.catch((err) => reject(err.response.data.message))
 	})
 );
 
-// TODO
-export const doDownload = (url: string, args: CrExRequestArgs, config: AxiosInstance): CrExResponse => {
-	return new Promise((resolve, reject) => {
-
-	});
-}
-
-const nodeBinaryParser = (res: any, done: any) => {
-	res.setEncoding('binary');
-	res.text = '';
-	res.on('data', (chunk: string) => {
-		res.text += chunk;
-	});
-	res.on('end', () => {
-		done(null, new Buffer(res.text, 'binary'));
-	});
-};
+export const doDownload = (url: string, params: CrExRequestArgs, instance: AxiosInstance): CrExResponse => (
+	new Promise((resolve, reject) => {
+		instance
+			.get(url, {
+				params,
+				responseType: 'arraybuffer'
+			})
+			.then((res) => resolve(res.data))
+			.catch((err) => reject(err.response.data.message))
+	})
+)

@@ -1,3 +1,5 @@
+import { ReadStream } from "fs";
+
 export type CrExOptions = {
 	user?: string,
 	password?: string,
@@ -37,7 +39,7 @@ export type CrExArgBuildPackage = {
 };
 
 export type CrExArgUploadPackage = {
-	file: ReadableStream<any>
+	file: ReadStream
 };
 
 export type CrExResponse = Promise<CrExPackage>;
@@ -53,5 +55,5 @@ interface CrExRequestArgs {
 	rootPath?: string;
 	name?: string;
 	synchronous?: boolean;
-	file?: ReadableStream<any>
+	file?: ReadStream
 }
