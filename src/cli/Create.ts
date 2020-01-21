@@ -1,6 +1,8 @@
 
 import { Command } from "commander";
 import { spinnerMsg } from "./msgs";
+import { CrExPackage } from "../index";
+
 const ora = require("ora");
 const CrEx = require("../lib/crex");
 
@@ -20,14 +22,13 @@ export default class Create {
     const rootPath = !path.startsWith("/") ? `/${path}` : path;
 
     this.spinner.start(spinnerMsg.creating);
-    this.spinner.fail(spinnerMsg.creating);
 
     this.crex
       .createPackage({ rootPath, name })
-      .then((res: any) => {
+      .then((res: CrExPackage) => {
         this.spinner.succeed("Package created on %s named %s");
       })
-      .catch((err: any) => {
+      .catch((err: string) => {
         this.spinner.fail(err);
       });
   }

@@ -1,13 +1,35 @@
 
-import { AxiosInstance } from "axios";
+import { AxiosError, AxiosInstance  } from "axios";
 import { CrExRequestArgs, CrExResponse } from "../index";
+
+const cacheError = (error: AxiosError, reject: any): void => {
+  let msg = error.message;
+
+  if (error.response) {
+    if (error.response.data && error.response.data.message) {
+      msg = error.response.data.message;
+    }
+  }
+
+  if (error.request) {
+    if (error.request.data && error.request.data.message) {
+      msg = error.request.data.message;
+    }
+  }
+
+  if (error.code === "ECONNREFUSED") {
+    msg = `Error: ${error.code} - Cannot connect to AEM`;
+  }
+
+  reject(msg);
+};
 
 export const doGet = (url: string, params: CrExRequestArgs, instance: AxiosInstance): CrExResponse => (
   new Promise((resolve, reject) => {
     instance
       .get(url, { params })
       .then((res) => resolve(res.data))
-      .catch((err) => reject(err.response.data.message));
+      .catch((err) => cacheError(err, reject));
   })
 );
 
@@ -16,7 +38,7 @@ export const doPost = (url: string, params: CrExRequestArgs, instance: AxiosInst
     instance
       .post(url, undefined, { params })
       .then((res) => resolve(res.data))
-      .catch((err) => reject(err.response.data.message));
+      .catch((err) => cacheError(err, reject));
   })
 );
 
@@ -25,7 +47,7 @@ export const doDelete = (url: string, params: CrExRequestArgs, instance: AxiosIn
     instance
       .delete(url, { params })
       .then((res) => resolve(res.data))
-      .catch((err) => reject(err.response.data.message));
+      .catch((err) => cacheError(err, reject));
   })
 );
 
@@ -48,7 +70,7 @@ export const doUpload = (url: string, data: CrExRequestArgs, instance: AxiosInst
         { headers: file.getHeaders() },
       )
       .then((res) => resolve(res.data))
-      .catch((err) => reject(err.response.data.message));
+      .catch((err) => cacheError(err, reject));
   })
 );
 
@@ -60,6 +82,6 @@ export const doDownload = (url: string, params: CrExRequestArgs, instance: Axios
         responseType: "arraybuffer",
       })
       .then((res) => resolve(res.data))
-      .catch((err) => reject(err.response.data.message));
+      .catch((err) => cacheError(err, reject));
   })
 );
