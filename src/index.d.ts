@@ -38,7 +38,8 @@ export type CrExArgBuildPackage = {
 };
 
 export type CrExArgUploadPackage = {
-	file: any
+	filePath: any,
+	file?: Blob
 };
 
 export type CrExResponse = Promise<CrExPackage>;
@@ -54,5 +55,6 @@ interface CrExRequestArgs {
 	rootPath?: string;
 	name?: string;
 	synchronous?: boolean;
-	file?: string;
+	filePath?: string 
+	file?: Blob
 }

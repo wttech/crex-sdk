@@ -18,13 +18,14 @@
   "dependencies": {
     "axios": "^0.19.1",
     "commander": "^2.20.3",
-    "ora": "^4.0.3",
-    "superagent": "^5.2.1"
+    "form-data": "^3.0.0",
+    "ora": "^4.0.3"
   },
   "devDependencies": {
     "@rollup/plugin-multi-entry": "^3.0.0",
     "@rollup/plugin-node-resolve": "^7.0.0",
     "@rollup/plugin-typescript": "^2.1.0",
+    "@types/axios": "^0.14.0",
     "@types/chai": "^4.2.7",
     "@types/chai-as-promised": "^7.1.2",
     "@types/mocha": "^5.2.7",

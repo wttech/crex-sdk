@@ -24,20 +24,14 @@ describe('CrEx', () => {
 	});
 
 	describe('#uploadPackage', () => {
-		it('should return list of packages', () => {
-			return expect(crex.getPackageList()).to.eventually.be.a('array');
-		});
-	});
-
-	describe('#uploadPackage', () => {
 		it('should upload package', () => {
 			return expect(crex.uploadPackage({
-				'file': fs.createReadStream(path.resolve(__dirname, 'test-package.zip'))
+				'filePath': path.resolve(__dirname, 'test-package.zip')
 			})).to.eventually.be.a('object');
 		});
 	});
 	
-	describe('#installPackage', () => {
+	xdescribe('#installPackage', () => {
 		it('should install package', () => {
 			return expect(crex.installPackage({
 				'packageId': '4731bd1f-876b-4879-b27a-fb58d6d2248f'
@@ -45,7 +39,7 @@ describe('CrEx', () => {
 		});
 	});
 	
-	describe('#createPackage and #deletePackage', () => {
+	xdescribe('#createPackage and #deletePackage', () => {
 		it('should create package and delete it', () => {
 			var request = new Promise((resolve, reject) => {
 				crex.createPackage({

@@ -1,5 +1,6 @@
+import axios, { AxiosInstance } from 'axios';
 import { CrExArgPackage, CrExArgAllPackage, CrExArgNewPackage, CrExArgBuildPackage, CrExResponse, CrExArgUploadPackage, CrExOptions } from '../index';
-import { doGet } from './request';
+import { doGet, doPost, doUpload, doDelete, doDownload, doInstall } from './request';
 const rootPath = '/apps/creative-exchange/web-api';
 
 export default class CrEx {
@@ -8,11 +9,11 @@ export default class CrEx {
 	public url: string = 'localhost';
 	public port: string = '4502';
 	public proxy: any = process.env.https_proxy || process.env.http_proxy;
-	public address: string;
+	public instance: AxiosInstance;
 
 	constructor(options: CrExOptions = {}) {
 		Object.assign(this, options)
-		this.address = this.getAddress();
+		this.instance = this.createAxiosInstance();
 	}
 
 	public setTarget(target: string) {
@@ -25,7 +26,7 @@ export default class CrEx {
 		this.port = address.length > 1 ? address[1] : '';
 	};
 
-	public getAddress = (): string  => (this.port !== '' ? `${this.url}:${this.port}` : this.url) || '';
+
 
 	// API
 	public getPackageStatus = (args: CrExArgPackage): CrExResponse => this.request('GET', `${rootPath}/status.json`, args);
@@ -42,22 +43,48 @@ export default class CrEx {
 
 	public uploadPackage = (args: CrExArgUploadPackage): CrExResponse => this.request('UPLOAD', `${rootPath}/upload.json`, args)
 
-	public installPackage = (args: CrExArgPackage): CrExResponse => this.request('POST', `${rootPath}/install.json`, args)
+	public installPackage = (args: CrExArgPackage): CrExResponse => this.request('INSTALL', `${rootPath}/install.json`, args)
 
 	private request(method: string, path: string, args: any): CrExResponse {
-		const fullPath = this.address + path;
-
 		switch (method) {
-			// case 'POST':
-			// 	return doPost(fullPath, args, this);
-			// case 'DELETE':
-			// 	return doDelete(fullPath, args, this);
-			// case 'UPLOAD':
-			// 	return doUpload(fullPath, args, this);
-			// case 'DOWNLOAD':
-			// 	return doDownload(fullPath, args, this);
+			case 'POST':
+				return doPost(path, args, this.instance);
+			case 'DELETE':
+				return doDelete(path, args, this.instance);
+			case 'INSTALL':
+				return doInstall(path, args, this.instance);
+			case 'UPLOAD':
+				return doUpload(path, args, this.instance);
+			case 'DOWNLOAD':
+				return doDownload(path, args, this.instance);
 			default:
-				return doGet(fullPath, args, this);
+				return doGet(path, args, this.instance);
 		}
 	};
+
+	private getAddress = (): string => {
+		let address;
+
+		if (this.port !== '') {
+			address = `http://${this.url}:${this.port}`
+		}
+
+		return address || ''
+	};
+
+	private createAxiosInstance = (): AxiosInstance => {
+		const instance = axios.create({
+			baseURL: this.getAddress(),
+			auth: {
+				username: this.user,
+				password: this.password
+			}
+		});
+
+		if (this.proxy) {
+			instance.defaults.proxy = this.proxy;
+		}
+
+		return instance;
+	}
 };
