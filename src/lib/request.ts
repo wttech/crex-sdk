@@ -40,6 +40,8 @@ export const doDelete = (url: string, params: CrExRequestArgs, instance: AxiosIn
 	})
 );
 
+// TODO
+// This shoudl work on browser and in console as well
 export const doUpload = (url: string, data: CrExRequestArgs, instance: AxiosInstance): CrExResponse => (
 	new Promise((resolve, reject) => {
 		const formData = new FormData();
@@ -69,6 +71,7 @@ export const doUpload = (url: string, data: CrExRequestArgs, instance: AxiosInst
 	})
 );
 
+// TODO
 export const doDownload = (url: string, args: CrExRequestArgs, config: AxiosInstance): CrExResponse => {
 	return new Promise((resolve, reject) => {
 
