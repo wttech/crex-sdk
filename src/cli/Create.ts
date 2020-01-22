@@ -1,7 +1,7 @@
 
 import { Command } from "commander";
-import { spinnerMsg } from "./msgs";
 import { CrExPackage } from "../index";
+import { spinnerMsg } from "./msgs";
 
 const ora = require("ora");
 const CrEx = require("../lib/crex");
