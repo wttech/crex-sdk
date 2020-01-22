@@ -1,4 +1,5 @@
-import program from "commander";
+const commander = require("commander");
+const program = new commander.Command();
 import Upload from "../cli/Upload";
 import { stringToList } from "../utils";
 

@@ -36,7 +36,7 @@ export const doGet = (url: string, params: CrExRequestArgs, instance: AxiosInsta
 export const doPost = (url: string, params: CrExRequestArgs, instance: AxiosInstance): CrExResponse => (
   new Promise((resolve, reject) => {
     instance
-      .post(url, undefined, { params })
+      .post(url, params, { params })
       .then((res) => resolve(res.data))
       .catch((err) => cacheError(err, reject));
   })

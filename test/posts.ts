@@ -7,7 +7,7 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 import CrEx from "../src/lib/crex";
 
-xdescribe("CrEx", () => {
+describe("CrEx", () => {
   const crex = new CrEx({
     password: "admin",
     port: "4502",

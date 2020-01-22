@@ -1,5 +1,5 @@
-
 import { Command } from "commander";
+import util from "util";
 import { CrExPackage } from "../index";
 import { spinnerMsg } from "./msgs";
 
@@ -25,8 +25,9 @@ export default class Create {
 
     this.crex
       .createPackage({ rootPath, name })
-      .then((res: CrExPackage) => {
-        this.spinner.succeed("Package created on %s named %s");
+      .then(({ name, packageId }: CrExPackage) => {
+        const msg = util.format("Package created named %s (%s)", name, packageId);
+        this.spinner.succeed(msg);
       })
       .catch((err: string) => {
         this.spinner.fail(err);
