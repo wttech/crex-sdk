@@ -1,14 +1,6 @@
-![Cognifide logo](https://assets.cognifide.com/github/cognifide-logo.png)
-
 # Creative Exchange SDK for JavaScript
 <a href="https://www.npmjs.com/package/crex"><img src="https://img.shields.io/npm/v/crex.svg" alt="Version"></a>
 <a href="https://www.npmjs.com/package/crex"><img src="https://img.shields.io/npm/l/crex.svg" alt="License"></a>
-
-<br>
-<p align="center">
-    <img width="300px" alt="Zen Garden logo" src="http://assets.cognifide.com/zg/logos/ce-sdk.png">
-</p>
-<br>
 
 Creative Exchange SDK simplifies automation of Creative Exchange development workflow. 
 It works both in Nodejs and in the browser, so it can be foundation for command line tools, electron apps, code editor plugins, browser monitoring tools and any other solutions that will make theme development easier for your organisation.
