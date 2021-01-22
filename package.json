@@ -7,7 +7,7 @@
   "main": "lib/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Cognifide/crex-sdk"
+    "url": "https://github.com/wttech/crex-sdk"
   },
   "engines": {
     "node": ">=8.11.1"
